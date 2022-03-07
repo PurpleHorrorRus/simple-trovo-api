@@ -1,16 +1,16 @@
 import { Headers } from "node-fetch";
 
-import Static from "./static";
-import Users from "./modules/users";
-import Categories from "./modules/categories";
-import Channel from "./modules/channel";
-import Channels from "./modules/channels";
-import Chat from "./modules/chat";
+import Static from "./lib/static";
+import Users from "./lib/modules/users";
+import Categories from "./lib/modules/categories";
+import Channel from "./lib/modules/channel";
+import Channels from "./lib/modules/channels";
+import Chat from "./lib/modules/chat";
 
-import { AuthParams, Errors } from "./interfaces/primary";
-import { TrovoConfig } from "./types/primary";
+import { AuthParams, Errors } from "./lib/interfaces/primary";
+import { TrovoConfig } from "./lib/types/primary";
 
-import defaultScopes from "./scopes.json";
+import defaultScopes from "./lib/scopes.json";
 
 class TrovoAPI {
     config: TrovoConfig;
@@ -64,4 +64,4 @@ class TrovoAPI {
     }
 }
 
-export default TrovoAPI;
+module.exports = TrovoAPI;

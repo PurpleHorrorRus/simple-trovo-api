@@ -1,8 +1,8 @@
 {
     "name": "simple-trovo-api",
     "version": "1.0.0",
-    "main": "./lib/index.js",
-    "types": "./lib/index.d.ts",
+    "main": "index.js",
+    "types": "index.d.ts",
     "license": "MIT",
     "author": {
         "email": "purplehorrorrus@gmail.com",
