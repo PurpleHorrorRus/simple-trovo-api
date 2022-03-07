@@ -46,7 +46,7 @@ class TrovoAPI {
         if (scopes.length === 0) {
             scopes = [
                 "user_details_self", "channel_details_self", "channel_update_self", "channel_subscriptions",
-                "chat_send_self", "send_to_my_channel", "manage_messages"
+                "chat_send_self", "send_to_my_channel", "manage_messages", "chat_connect"
             ];
         }
 
