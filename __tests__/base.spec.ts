@@ -64,7 +64,7 @@ describe("Categories", () => {
 
 describe("Channels", () => {
     // test("Get Channel", async () => {
-    //     const channel = await Trovo.channels.get("Dreissig");
+    //     const channel = await Trovo.channels.get(user_id);
     //     expect(channel).toBeTruthy();
     // });
 
