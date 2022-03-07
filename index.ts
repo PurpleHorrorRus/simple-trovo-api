@@ -1,2 +1,2 @@
 import TrovoAPI from "./src/trovo";
-export default TrovoAPI;
+module.exports = TrovoAPI;
