@@ -1,19 +1,19 @@
 {
     "name": "simple-trovo-api",
     "version": "1.0.0",
-    "main": "index.js",
+    "main": "./lib/trovo.js",
     "license": "MIT",
     "author": {
         "email": "purplehorrorrus@gmail.com",
         "name": "Maxim",
         "url": "https://purplehorrorrus.github.io"
     },
+    "repository": "https://github.com/PurpleHorrorRus/simple-trovo-api",
     "scripts": {
         "lint": "eslint . --ext .ts",
         "compile": "tsc",
         "test": "jest"
     },
-    "repository": "https://github.com/PurpleHorrorRus/simple-trovo-api",
     "devDependencies": {
         "@types/jest": "^27.4.1",
         "@types/node": "^17.0.21",

@@ -1,11 +1,11 @@
 import { Headers } from "node-fetch";
 
 import Static from "./static";
-import Users from "./lib/users";
-import Categories from "./lib/categories";
-import Channel from "./lib/channel";
-import Channels from "./lib/channels";
-import Chat from "./lib/chat";
+import Users from "./modules/users";
+import Categories from "./modules/categories";
+import Channel from "./modules/channel";
+import Channels from "./modules/channels";
+import Chat from "./modules/chat";
 
 import { AuthParams, Errors } from "./interfaces/primary";
 import { TrovoConfig } from "./types/primary";
