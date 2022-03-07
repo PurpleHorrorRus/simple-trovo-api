@@ -6,7 +6,7 @@ jest.setTimeout(60 * 1000 * 2);
 
 let Trovo: TrovoAPI;
 let user_id: number;
-let second_id: number
+let second_id: number;
 
 const testingUsers = ["InfiniteHorror", "Wara"];
 
