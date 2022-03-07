@@ -25,7 +25,6 @@ const Trovo = new TrovoAPI({
 });
 
 const scopes = []; // Leave it empty to grant access with all available scopes
-
 const url = Trovo.getAuthLink(scopes, "https://purplehorrorrus.github.io/token");
 
 console.log(url);
