@@ -5,6 +5,7 @@ import { WSMesageData, WSMessage } from "../../interfaces/chat";
 
 class ChatService extends EventEmitter { 
     private endpoint = "wss://open-chat.trovo.live/chat";
+    private connected: boolean = false;
     private heartbeatRate = 25;
     private nonces = {
         AUTH: "client-auth",
@@ -21,11 +22,36 @@ class ChatService extends EventEmitter {
     }
 
     connect(token: string): Promise<boolean | void> {
-        return new Promise(resolve => { 
+        return new Promise((resolve, reject) => { 
+            if (this.connected) {
+                return resolve(false);
+            }
+
             this.socket = new WebSocket(this.endpoint);
-            this.socket.onmessage = message => resolve(this.messageHandler(message));
-            this.socket.onopen = () => this.send("AUTH", this.nonces.AUTH, { token });
+            this.socket.onmessage = message => { 
+                try {
+                    const response = this.messageHandler(message);
+                    return resolve(response);
+                } catch (error) {
+                    return reject(this.disconnect(error));
+                }
+            };
+            
+            this.socket.onopen = () => {
+                this.send("AUTH", this.nonces.AUTH, { token });
+                this.connected = true;
+            };
+
+            this.socket.onerror = async error => {
+                reject(this.disconnect(error));
+                return await this.connect(token);
+            }
         });
+    }
+
+    disconnect(error: Error | WebSocket.ErrorEvent | unknown): void {
+        this.emit("disconnected", error);
+        this.connected = false;
     }
 
     send(type: string, nonce: string, data?: WSMesageData): boolean {
@@ -48,6 +74,7 @@ class ChatService extends EventEmitter {
         switch (response.type) { 
             case "RESPONSE": {
                 const connected: boolean = !("error" in response) && response.nonce === this.nonces.AUTH;
+                
                 if (connected) {
                     this.emit("connected");
                     

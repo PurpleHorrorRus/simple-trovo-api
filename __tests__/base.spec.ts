@@ -26,6 +26,10 @@ beforeAll(async () => {
             console.log("Chat has been connected");
             return resolve(true);
         });
+
+        Trovo.chat.service.once("disconnected", error => {
+            console.log("Disconnected Event", error);
+        });
     
         Trovo.chat.service.connect(chatToken);
     });
