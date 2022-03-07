@@ -4,12 +4,15 @@ import WebSocket from "ws";
 import { WSMesageData, WSMessage } from "../../interfaces/chat";
 
 class ChatService extends EventEmitter { 
-    private chatEndpoint = "wss://open-chat.trovo.live/chat";
+    private endpoint = "wss://open-chat.trovo.live/chat";
+    private heartbeatRate = 25;
     private nonces = {
-        AUTH: "client-auth"
+        AUTH: "client-auth",
+        PING: "client-ping"
     };
 
     socket: WebSocket;
+    heartbeat: NodeJS.Timer;
 
     private lastMessageTime: number = Number(String(Date.now()).substring(0, 10));
 
@@ -19,13 +22,13 @@ class ChatService extends EventEmitter {
 
     connect(token: string): Promise<boolean | void> {
         return new Promise(resolve => { 
-            this.socket = new WebSocket(this.chatEndpoint);
+            this.socket = new WebSocket(this.endpoint);
             this.socket.onmessage = message => resolve(this.messageHandler(message));
             this.socket.onopen = () => this.send("AUTH", this.nonces.AUTH, { token });
         });
     }
 
-    send(type: string, nonce: string, data: WSMesageData): boolean {
+    send(type: string, nonce: string, data?: WSMesageData): boolean {
         if (!this.socket) {
             return false;
         }
@@ -45,7 +48,15 @@ class ChatService extends EventEmitter {
         switch (response.type) { 
             case "RESPONSE": {
                 const connected: boolean = !("error" in response) && response.nonce === this.nonces.AUTH;
-                if (connected) this.emit("connected");
+                if (connected) {
+                    this.emit("connected");
+                    
+                    this.heartbeat = setInterval(() => {
+                        this.send("PING", this.nonces.PING);
+                        this.emit("heartbeat");
+                    }, this.heartbeatRate * 1000);
+                }
+                
                 return connected;
             }
             

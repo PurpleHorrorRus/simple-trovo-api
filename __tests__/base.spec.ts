@@ -138,6 +138,14 @@ describe("Chat", () => {
     //     expect(message).toBeTruthy();
     // });
 
+    // test("Stay alive", async () => {
+    //     await new Promise(() => {
+    //         Trovo.chat.service.on("message", message => {
+    //             console.log(`${message.nick_name}: ${message.content}`);
+    //         });
+    //     });
+    // });
+
     // test("Delete Message", async () => {
     //     await new Promise(resolve => {
     //         Trovo.chat.service.once("message", async message => { 
