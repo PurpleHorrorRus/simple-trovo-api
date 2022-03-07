@@ -12,7 +12,7 @@
     "repository": "https://github.com/PurpleHorrorRus/simple-trovo-api",
     "scripts": {
         "lint": "eslint . --ext .ts",
-        "compile": "tsc",
+        "build": "tsc",
         "test": "jest"
     },
     "devDependencies": {
