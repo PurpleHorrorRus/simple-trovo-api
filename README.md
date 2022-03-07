@@ -54,12 +54,16 @@ Trovo uses simple WebSocket connection to receive messages from your chat and si
 Example:
 
 ```javascript
-Trovo.chat.service.once("connected", () => {
+Trovo.chat.service.on("connected", () => {
 
     // Listen messages
     Trovo.chat.service.on("message", message => {
         console.log(message);
     });
+});
+
+Trovo.chat.service.on("disconnected", error => {
+    console.error("Trovo chat has been disconnected", error);
 });
 
 const token = await Trovo.chat.token();
