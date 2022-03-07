@@ -5,6 +5,9 @@ import { TrovoConfig } from "./types/primary";
 
 import Static from "./static";
 import Users from "./lib/users";
+import Categories from "./lib/categories";
+import Channel from "./lib/channel";
+import Channels from "./lib/channels";
 import Chat from "./lib/chat";
 
 class TrovoAPI {
@@ -13,6 +16,9 @@ class TrovoAPI {
     headers: Headers = new Headers();
 
     users: Users = new Users(this.headers);
+    categories: Categories = new Categories(this.headers);
+    channel: Channel = new Channel(this.headers);
+    channels: Channels = new Channels(this.headers);
     chat: Chat = new Chat(this.headers);
 
     constructor(config: TrovoConfig) {

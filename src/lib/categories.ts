@@ -11,6 +11,16 @@ class Categories extends TrovoRequests {
     async get(): TrovoRequestType {
         return await this.requestEndpoint("categorys/top");
     }
+    
+    async search(query: string, limit: number = 20): TrovoRequestType {
+        return await this.requestEndpoint("searchcategory", {
+            method: "POST",
+            body: JSON.stringify({
+                query,
+                limit
+            })
+        });
+    }
 }
 
 export default Categories;
