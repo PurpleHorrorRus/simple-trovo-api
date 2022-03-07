@@ -3,16 +3,19 @@ import WebSocket from "ws";
 
 import { WSMesageData, WSMessage } from "../../interfaces/chat";
 
-class ChatService { 
+class ChatService extends EventEmitter { 
     private chatEndpoint = "wss://open-chat.trovo.live/chat";
     private nonces = {
         AUTH: "client-auth"
     };
 
     socket: WebSocket;
-    events: EventEmitter = new EventEmitter();
 
     private lastMessageTime: number = Number(String(Date.now()).substring(0, 10));
+
+    constructor() {
+        super();
+    }
 
     connect(token: string): Promise<boolean | void> {
         return new Promise(resolve => { 
@@ -42,7 +45,7 @@ class ChatService {
         switch (response.type) { 
             case "RESPONSE": {
                 const connected: boolean = !("error" in response) && response.nonce === this.nonces.AUTH;
-                if (connected) this.events.emit("connected");
+                if (connected) this.emit("connected");
                 return connected;
             }
             
@@ -53,7 +56,7 @@ class ChatService {
 
                 if (newMessages.length > 0) {
                     for (const message of newMessages) {
-                        this.events.emit("message", message);
+                        this.emit("message", message);
                     }
 
                     this.lastMessageTime = Number(String(Date.now()).substring(0, 10));
