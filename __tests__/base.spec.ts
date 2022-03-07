@@ -2,6 +2,8 @@ import "dotenv/config";
 
 import TrovoAPI from "../src/trovo";
 
+jest.setTimeout(60 * 1000 * 2);
+
 let Trovo: TrovoAPI;
 let user_id: number;
 let second_id: number
@@ -15,6 +17,16 @@ beforeAll(async () => {
     const { users } = await Trovo.users.get(["InfiniteHorror", "Wara"]);
     user_id = users[0].user_id;
     second_id = users[1].user_id;
+
+    const chatToken = await Trovo.chat.token();
+    await new Promise(resolve => {
+        Trovo.chat.service.events.once("connected", () => { 
+            console.log("Chat has been connected");
+            return resolve(true);
+        });
+    
+        Trovo.chat.service.connect(chatToken);
+    });
 });
 
 // describe("Main", () => {
@@ -106,15 +118,33 @@ beforeAll(async () => {
     // });
 // });
 
-// describe("Chat", () => {
-//     test("Receive message", async () => {
-//         const token: string = await Trovo.chat.token();
-//         await Trovo.chat.connect(token);
-        
-//         const message = await new Promise(resolve => {
-//             Trovo.chat.events.on("message", resolve);
-//         });
+describe("Chat", () => {
+    // test("Get Token", async () => {
+    //     const token = await Trovo.chat.token();
+    //     expect(token).toBeTruthy();
+    // });
+    
+    // test("Send Message", async () => {
+    //     const message = await Trovo.chat.send("Sended from simple-trovo-api");
+    //     expect(message).toBeTruthy();
+    // });
 
-//         expect(message).toBeTruthy();
-//     });
-// });
+    // test("Receive message", async () => {
+    //     const message = await new Promise(resolve => {
+    //         Trovo.chat.service.events.on("message", resolve);
+    //     });
+
+    //     expect(message).toBeTruthy();
+    // });
+
+    // test("Delete Message", async () => {
+    //     await new Promise(resolve => {
+    //         Trovo.chat.service.events.once("message", async message => { 
+    //             await Trovo.chat.delete(user_id, message.message_id, message.uid);
+    //             return resolve(true);
+    //         });
+    
+    //         Trovo.chat.send("(To delete) Sended from simple-trovo-api, " + Date.now());
+    //     });
+    // });
+});
