@@ -8,13 +8,15 @@ let Trovo: TrovoAPI;
 let user_id: number;
 let second_id: number
 
+const testingUsers = ["InfiniteHorror", "Wara"];
+
 beforeAll(async () => {
     Trovo = new TrovoAPI({
         client_id: process.env.CLIENT_ID!,
         access_token: process.env.ACCESS_TOKEN!
     });
 
-    const { users } = await Trovo.users.get(["InfiniteHorror", "Wara"]);
+    const { users } = await Trovo.users.get(testingUsers);
     user_id = users[0].user_id;
     second_id = users[1].user_id;
 
@@ -43,8 +45,7 @@ beforeAll(async () => {
     // });
 
     // test("Get Users by ID", async () => { 
-    //     const users = ["InfiniteHorror", "HerouTV"];
-    //     const response = await Trovo.users.get(users);
+    //     const response = await Trovo.users.get(testingUsers);
     //     expect(response.length).toBeGreaterThan(0);
     // });
 // });
