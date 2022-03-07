@@ -17,6 +17,6 @@ declare class Channel extends TrovoRequests {
     streamUrls(channel_id: channelIDType): TrovoRequestType;
     clips(channel_id: channelIDType, category_id?: string, period?: string, clip_id?: string, limit?: number, cursor?: number, direction?: sortingDirectionType): TrovoRequestType;
     pastStreams(channel_id: channelIDType, category_id?: string, period?: string, past_stream_id?: string, limit?: number, cursor?: number, direction?: sortingDirectionType): TrovoRequestType;
-    edit(channel_id: channelIDType, live_title?: string, category?: string, language_code?: string, audi_type?: auditoryType): TrovoRequestType;
+    edit(channel_id: channelIDType, live_title?: string, category_id?: string, language_code?: string, audi_type?: auditoryType): TrovoRequestType;
 }
 export default Channel;
