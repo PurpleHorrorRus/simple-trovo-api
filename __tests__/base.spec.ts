@@ -87,8 +87,17 @@ describe("Channel", () => {
     // });
 
     // test("Get Followers", async () => {
-    //     const followers = await Trovo.channel.followers(second_id);
-    //     expect(followers).toBeTruthy();
+    //     let result: Array<any> = [];
+
+    //     let followers = await Trovo.channel.followers(second_id, 100);
+    //     result = followers.follower;
+
+    //     while (Number(followers.total) > result.length) {
+    //         followers = await Trovo.channel.followers(second_id, 100, followers.cursor);
+    //         result = result.concat(result, followers.follower);
+    //     }
+
+    //     expect(result).toBeTruthy();
     // });
 
     // test("Get Viewers", async () => {
