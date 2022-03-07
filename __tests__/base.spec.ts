@@ -1,6 +1,6 @@
 import "dotenv/config";
 
-import TrovoAPI from "../src/trovo";
+import { TrovoAPI } from "../src/index";
 
 jest.setTimeout(60 * 1000 * 2);
 

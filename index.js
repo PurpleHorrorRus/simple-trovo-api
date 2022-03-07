@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TrovoAPI = void 0;
 const node_fetch_1 = require("node-fetch");
 const static_1 = __importDefault(require("./lib/static"));
 const users_1 = __importDefault(require("./lib/modules/users"));
@@ -53,4 +54,4 @@ class TrovoAPI {
         return `${loginRoot}?${query}`;
     }
 }
-module.exports = TrovoAPI;
+exports.TrovoAPI = TrovoAPI;

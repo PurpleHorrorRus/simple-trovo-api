@@ -12,7 +12,7 @@ import { TrovoConfig } from "./lib/types/primary";
 
 import defaultScopes from "./lib/scopes.json";
 
-class TrovoAPI {
+export class TrovoAPI {
     config: TrovoConfig;
     errors: Errors;
     headers: Headers = new Headers();
@@ -63,5 +63,3 @@ class TrovoAPI {
         return `${loginRoot}?${query}`;
     }
 }
-
-module.exports = TrovoAPI;

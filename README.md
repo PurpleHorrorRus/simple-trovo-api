@@ -18,7 +18,7 @@ If you already have access token, you can skip this step.
 You must to fetch your personal token with generated with specified scopes and specified redirect url in page with your application.
 
 ```javascript
-const TrovoAPI = require("simple-trovo-api");
+const { TrovoAPI } = require("simple-trovo-api");
 
 const Trovo = new TrovoAPI({
     client_id: "xxxxxxxxx"
@@ -34,7 +34,7 @@ console.log(url);
 Now you can use this package at full power. Here is example (fetch information about yourself):
 
 ```javascript
-const TrovoAPI = require("simple-trovo-api");
+const { TrovoAPI } = require("simple-trovo-api");
 
 (async () => {
     const Trovo = new TrovoAPI({
