@@ -17,8 +17,8 @@ beforeAll(async () => {
     });
 
     const { users } = await Trovo.users.get(testingUsers);
-    user_id = users[0].user_id;
-    second_id = users[1].user_id;
+    user_id = Number(users[0].user_id);
+    second_id = Number(users[1].user_id);
 
     const chatToken = await Trovo.chat.token();
     await new Promise(resolve => {
@@ -57,14 +57,14 @@ describe("Categories", () => {
     // });
 
     // test("Search Categories", async () => {
-    //     const result = await Trovo.categories.search("League of");
+    //     const result = await Trovo.categories.search("League of Legends");
     //     expect(result).toBeTruthy();
     // });
 });
 
 describe("Channels", () => {
     // test("Get Channel", async () => {
-    //     const channel = await Trovo.channels.get("HerouTV");
+    //     const channel = await Trovo.channels.get("Dreissig");
     //     expect(channel).toBeTruthy();
     // });
 
@@ -76,8 +76,8 @@ describe("Channels", () => {
 
 describe("Channel", () => {
     // test("Edit Channel", async () => {
-    //     const channel = await Trovo.users.get(["InfiniteHorror"]);
-    //     const response = await Trovo.channel.edit(channel.users[0].user_id);
+    //     const game = await Trovo.categories.search("League of Legends");
+    //     const response = await Trovo.channel.edit(user_id, "Stream title changed with simple-trovo-api", game.category_info[0].id);
     //     expect(response.empty).toBe("");
     // });
 

@@ -99,13 +99,13 @@ class Channel extends TrovoRequests {
         });
     }
 
-    async edit(channel_id: channelIDType, live_title: string = "", category: string = "", language_code: string = "RU", audi_type: auditoryType = "CHANNEL_AUDIENCE_TYPE_EIGHTEENPLUS"): TrovoRequestType {
+    async edit(channel_id: channelIDType, live_title: string = "", category_id: string = "", language_code: string = "RU", audi_type: auditoryType = "CHANNEL_AUDIENCE_TYPE_EIGHTEENPLUS"): TrovoRequestType {
         return await this.requestEndpoint("channels/update", {
             method: "POST",
             body: JSON.stringify({
                 channel_id,
                 live_title,
-                category,
+                category_id,
                 language_code: language_code.toUpperCase(),
                 audi_type
             })
