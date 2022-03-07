@@ -30,8 +30,8 @@ class TrovoRequests extends Static {
     }
 
     async requestEndpoint(endpoint: string, params: TrovoRequestInit = {}): TrovoRequestType {
-        if (params.body && typeof params.body === "object") {
-            params.body = JSON.stringify(params.body);
+        if (params.body) {
+            params.method = "POST";
         }
 
         return await this.request(`${this.apiRoot}/${endpoint}`, params);
