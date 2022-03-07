@@ -119,33 +119,33 @@ describe("Categories", () => {
 //     });
 // });
 
-// describe("Chat", () => {
-//     test("Get Token", async () => {
-//         const token = await Trovo.chat.token();
-//         expect(token).toBeTruthy();
-//     });
+describe("Chat", () => {
+    // test("Get Token", async () => {
+    //     const token = await Trovo.chat.token();
+    //     expect(token).toBeTruthy();
+    // });
     
-//     test("Send Message", async () => {
-//         const message = await Trovo.chat.send("Sended from simple-trovo-api");
-//         expect(message).toBeTruthy();
-//     });
+    // test("Send Message", async () => {
+    //     const message = await Trovo.chat.send("Sended from simple-trovo-api");
+    //     expect(message).toBeTruthy();
+    // });
 
-//     test("Receive message", async () => {
-//         const message = await new Promise(resolve => {
-//             Trovo.chat.service.on("message", resolve);
-//         });
+    // test("Receive message", async () => {
+    //     const message = await new Promise(resolve => {
+    //         Trovo.chat.service.on("message", resolve);
+    //     });
 
-//         expect(message).toBeTruthy();
-//     });
+    //     expect(message).toBeTruthy();
+    // });
 
-//     test("Delete Message", async () => {
-//         await new Promise(resolve => {
-//             Trovo.chat.service.once("message", async message => { 
-//                 await Trovo.chat.delete(user_id, message.message_id, message.uid);
-//                 return resolve(true);
-//             });
+    // test("Delete Message", async () => {
+    //     await new Promise(resolve => {
+    //         Trovo.chat.service.once("message", async message => { 
+    //             await Trovo.chat.delete(user_id, message.message_id, message.uid);
+    //             return resolve(true);
+    //         });
     
-//             Trovo.chat.send("(To delete) Sended from simple-trovo-api, " + Date.now());
-//         });
-//     });
-// });
+    //         Trovo.chat.send("(To delete) Sended from simple-trovo-api, " + Date.now());
+    //     });
+    // });
+});
