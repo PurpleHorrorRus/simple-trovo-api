@@ -1,14 +1,16 @@
 import { Headers } from "node-fetch";
 
-import { AuthParams, Errors } from "./interfaces/primary";
-import { TrovoConfig } from "./types/primary";
-
 import Static from "./static";
 import Users from "./lib/users";
 import Categories from "./lib/categories";
 import Channel from "./lib/channel";
 import Channels from "./lib/channels";
 import Chat from "./lib/chat";
+
+import { AuthParams, Errors } from "./interfaces/primary";
+import { TrovoConfig } from "./types/primary";
+
+import defaultScopes from "./scopes.json";
 
 class TrovoAPI {
     config: TrovoConfig;
@@ -44,10 +46,7 @@ class TrovoAPI {
         }
 
         if (scopes.length === 0) {
-            scopes = [
-                "user_details_self", "channel_details_self", "channel_update_self", "channel_subscriptions",
-                "chat_send_self", "send_to_my_channel", "manage_messages", "chat_connect"
-            ];
+            scopes = defaultScopes;
         }
 
         const loginRoot = "https://open.trovo.live/page/login.html";
