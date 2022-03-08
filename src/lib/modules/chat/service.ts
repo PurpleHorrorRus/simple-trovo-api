@@ -88,7 +88,7 @@ class ChatService extends EventEmitter {
             }
             
             case "CHAT": {
-                const newMessages: Array<any> = response.data.chats.filter((message: any) => {
+                const newMessages: ChatMessage[] = response.data.chats.filter((message: ChatMessage) => {
                     return message.send_time > this.lastMessageTime;
                 });
 
@@ -97,12 +97,16 @@ class ChatService extends EventEmitter {
                         this.emit("message", message);
                     }
 
-                    this.lastMessageTime = Number(String(Date.now()).substring(0, 10));
+                    this.lastMessageTime = this.formatTime();
                 }
 
                 return true;
             }
         }
+    }
+
+    formatTime(): number {
+        return Number(Date.now().toString().substring(0, 10));
     }
 }
 
