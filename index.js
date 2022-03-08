@@ -21,12 +21,8 @@ class TrovoAPI {
         this.channels = new channels_1.default(this.headers);
         this.chat = new chat_1.default(this.headers);
         this.config = config;
-        this.errors = {
-            NO_REDIRECT_URI: "You must to specify redirect_uri",
-            NO_ACCESS_TOKEN: "You don't specify your access_token"
-        };
         if (!("access_token" in config)) {
-            console.warn(this.errors.NO_ACCESS_TOKEN);
+            console.warn("You must to specify redirect_uri");
         }
         else {
             this.headers.set("Accept", "application/json");
@@ -35,9 +31,6 @@ class TrovoAPI {
         }
     }
     getAuthLink(scopes = [], redirect_uri) {
-        if (!redirect_uri) {
-            throw new Error(this.errors.NO_REDIRECT_URI);
-        }
         if (scopes.length === 0) {
             scopes = scopes_json_1.default;
         }
@@ -47,8 +40,7 @@ class TrovoAPI {
             client_id: this.config.client_id,
             redirect_uri,
             response_type: "token",
-            scope: joinedScopes,
-            state: "ABC"
+            scope: joinedScopes
         };
         const query = static_1.default.generateQuery(params);
         return `${loginRoot}?${query}`;

@@ -4,11 +4,9 @@ import Categories from "./lib/modules/categories";
 import Channel from "./lib/modules/channel";
 import Channels from "./lib/modules/channels";
 import Chat from "./lib/modules/chat";
-import { Errors } from "./lib/interfaces/primary";
 import { TrovoConfig } from "./lib/types/primary";
 export declare class TrovoAPI {
     config: TrovoConfig;
-    errors: Errors;
     headers: Headers;
     users: Users;
     categories: Categories;

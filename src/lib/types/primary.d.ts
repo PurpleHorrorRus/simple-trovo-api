@@ -1,6 +1,4 @@
-import { ProcessEnv } from "../interfaces/primary"
-
-export type TrovoConfig = ProcessEnv & {
+export type TrovoConfig = {
     client_id: string
     access_token?: string
 }
