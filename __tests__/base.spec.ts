@@ -169,4 +169,9 @@ describe("Chat", () => {
     //         Trovo.chat.send("(To delete) Sended from simple-trovo-api, " + Date.now());
     //     });
     // });
+    
+    // test("Perform Command", async () => {
+    //     const response = await Trovo.chat.command("mods", user_id);
+    //     expect(response).toBeTruthy();
+    // });
 });

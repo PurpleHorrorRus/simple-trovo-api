@@ -52,6 +52,17 @@ class Chat extends TrovoRequests {
             method: "DELETE"
         });
     }
+
+    async command(command: string, chaneelID: number | string): TrovoRequestType {
+        command = command.replace("/", "");
+        return await this.requestEndpoint("channels/command", {
+            method: "POST",
+            body: JSON.stringify({
+                command,
+                channel_id: chaneelID
+            })
+        });
+    }
 }
 
 export default Chat;

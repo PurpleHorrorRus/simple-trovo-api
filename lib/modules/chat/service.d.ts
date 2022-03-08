@@ -14,6 +14,7 @@ declare class ChatService extends EventEmitter {
     connect(token: string): Promise<boolean | void>;
     disconnect(error: Error | WebSocket.ErrorEvent | unknown): void;
     send(type: string, nonce: string, data?: WSMesageData): boolean;
-    messageHandler(message: any): any;
+    messageHandler(message: WebSocket.MessageEvent): any;
+    formatTime(): number;
 }
 export default ChatService;
