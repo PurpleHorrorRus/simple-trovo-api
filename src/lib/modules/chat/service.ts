@@ -1,12 +1,12 @@
 import EventEmitter from "events";
 import WebSocket from "ws";
 
-import { WSMesageData, WSMessage } from "../../interfaces/chat";
+import { ChatMessage, WSMesageData, WSMessage } from "../../interfaces/chat";
 
 class ChatService extends EventEmitter { 
-    private endpoint = "wss://open-chat.trovo.live/chat";
+    private endpoint: string = "wss://open-chat.trovo.live/chat";
     private connected: boolean = false;
-    private heartbeatRate = 25;
+    private heartbeatRate: number = 25;
     private nonces = {
         AUTH: "client-auth",
         PING: "client-ping"
@@ -15,7 +15,8 @@ class ChatService extends EventEmitter {
     socket: WebSocket;
     heartbeat: NodeJS.Timer;
 
-    private lastMessageTime: number = Number(String(Date.now()).substring(0, 10));
+    // Watching only new messages
+    private lastMessageTime: number = this.formatTime();
 
     constructor() {
         super();
@@ -64,7 +65,7 @@ class ChatService extends EventEmitter {
         return true;
     }
 
-    messageHandler(message: any): any {
+    messageHandler(message: WebSocket.MessageEvent): any {
         const response = JSON.parse(message.data.toString());
 
         if (response.error) {
