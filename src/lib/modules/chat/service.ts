@@ -16,7 +16,7 @@ class ChatService extends EventEmitter {
     heartbeat: NodeJS.Timer;
 
     // Watching only new messages
-    private lastMessageTime: number = this.formatTime();
+    private lastMessageTime: number = this.updateTime();
 
     constructor() {
         super();
@@ -98,7 +98,7 @@ class ChatService extends EventEmitter {
                         this.emit("message", message);
                     }
 
-                    this.lastMessageTime = this.formatTime();
+                    this.lastMessageTime = this.updateTime();
                 }
 
                 return true;
@@ -106,7 +106,7 @@ class ChatService extends EventEmitter {
         }
     }
 
-    formatTime(): number {
+    updateTime(): number {
         return Number(Date.now().toString().substring(0, 10));
     }
 }
