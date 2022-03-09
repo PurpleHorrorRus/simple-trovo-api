@@ -1,5 +1,5 @@
 export interface ChatServiceConfig {
-    fetchAllMessages: boolean = false
+    fetchAllMessages?: boolean
 }
 
 export interface WSMesageData {

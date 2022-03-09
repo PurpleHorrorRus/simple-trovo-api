@@ -7,6 +7,10 @@ class ChatService extends EventEmitter {
     private endpoint: string = "wss://open-chat.trovo.live/chat";
     private connected: boolean = false;
     private heartbeatRate: number = 25;
+    private defaultChatServiceConfig: ChatServiceConfig = {
+        fetchAllMessages: false
+    };
+
     private nonces = {
         AUTH: "client-auth",
         PING: "client-ping"
@@ -18,43 +22,44 @@ class ChatService extends EventEmitter {
 
     private lastMessageTime: number = 0;
 
-    constructor(config: ChatServiceConfig) {
+    constructor() {
         super();
-
-        this.config = config;
     }
 
-    connect(token: string): Promise<boolean | void> {
-        return new Promise((resolve, reject) => { 
-            if (this.connected) {
-                return resolve(false);
-            }
+    connect(token: string, chatServiceConfig: ChatServiceConfig = {}): Promise<boolean> | boolean {
+        if (this.connected) {
+            return false;
+        }
 
-            this.socket = new WebSocket(this.endpoint);
+        this.config = {
+            ...this.defaultChatServiceConfig,
+            ...chatServiceConfig
+        };
+
+        this.socket = new WebSocket(this.endpoint);
+        this.socket.onopen = () => {
+            this.send("AUTH", this.nonces.AUTH, { token });
+            this.connected = true;
+        };
+
+        return new Promise((resolve, reject) => { 
             this.socket.onmessage = message => { 
-                try {
-                    const response = this.messageHandler(message);
-                    return resolve(response);
-                } catch (error) {
-                    return reject(this.disconnect(error));
-                }
+                const response = this.messageHandler(message);
+                return !response.error
+                    ? resolve(response)
+                    : reject(this.disconnect(response.error));
             };
             
-            this.socket.onopen = () => {
-                this.send("AUTH", this.nonces.AUTH, { token });
-                this.connected = true;
-            };
-
             this.socket.onerror = async error => {
                 reject(this.disconnect(error));
-                return await this.connect(token);
+                return await this.connect(token, chatServiceConfig);
             }
         });
     }
 
-    disconnect(error: Error | WebSocket.ErrorEvent | unknown): void {
-        this.emit("disconnected", error);
+    disconnect(error: Error | WebSocket.ErrorEvent | unknown): boolean {
         this.connected = false;
+        return this.emit("disconnected", error);
     }
 
     send(type: string, nonce: string, data?: WSMesageData): boolean {
@@ -71,7 +76,7 @@ class ChatService extends EventEmitter {
         const response = JSON.parse(message.data.toString());
 
         if (response.error) {
-            throw new Error(response.error);
+            return response;
         }
         
         switch (response.type) { 

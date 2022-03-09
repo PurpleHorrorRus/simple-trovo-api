@@ -10,11 +10,6 @@ import Chat from "./lib/modules/chat";
 import { TrovoConfig, AuthParams } from "./lib/interfaces/primary";
 
 import defaultScopes from "./lib/scopes.json";
-import { ChatServiceConfig } from "./lib/interfaces/chat";
-
-const defaultChatServiceConfig: ChatServiceConfig = {
-    fetchAllMessages: false
-};
 
 export class TrovoAPI {
     config: TrovoConfig;
@@ -24,10 +19,9 @@ export class TrovoAPI {
     categories: Categories = new Categories(this.headers);
     channel: Channel = new Channel(this.headers);
     channels: Channels = new Channels(this.headers);
-    chat: Chat;
+    chat: Chat = new Chat(this.headers);
 
     constructor(config: TrovoConfig) {
-        config.chatServiceConfig = config.chatServiceConfig || defaultChatServiceConfig;
         this.config = config;
 
         if (!("access_token" in config)) {
@@ -36,8 +30,6 @@ export class TrovoAPI {
             this.headers.set("Accept", "application/json");
             this.headers.set("Client-ID", this.config.client_id);
             this.headers.set("Authorization", `OAuth ${this.config.access_token}`);
-
-            this.chat = new Chat(this.headers, config.chatServiceConfig);
         }
     }
     
