@@ -1,6 +1,6 @@
 ## Simple Trovo API
 
-An open-source package that allows to integrate your applications with Trovo API. All requests matching to the [docs](https://developer.trovo.live/docs/APIs.html#_1-introduction). This package supports TypeScript.
+An open-source package that allows easy to integrate your applications with Trovo API. All requests matching to the [docs](https://developer.trovo.live/docs/APIs.html#_1-introduction). This package supports TypeScript.
 
 ## Usage
 

@@ -4,12 +4,17 @@
     "main": "index.js",
     "types": "types/index.d.ts",
     "license": "MIT",
+    "description": "An open-source package that allows easy to integrate your applications with Trovo API.",
     "author": {
         "email": "purplehorrorrus@gmail.com",
         "name": "Maxim",
         "url": "https://purplehorrorrus.github.io"
     },
     "repository": "https://github.com/PurpleHorrorRus/simple-trovo-api",
+    "bugs": {
+        "email": "purplehorrorrus@gmail.com",
+        "url": "https://github.com/PurpleHorrorRus/simple-trovo-api/issues"
+    },
     "keywords": ["API", "Trovo", "Trovo API", "Broadcasts", "Streams"],
     "scripts": {
         "lint": "eslint . --ext .ts",
