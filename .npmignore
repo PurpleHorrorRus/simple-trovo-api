@@ -1,0 +1,10 @@
+__tests__
+.vscode
+node_modules
+src
+.env
+.eslintrc.json
+.gitignore
+.npmignore
+jest.config.js
+tsconfig.json
