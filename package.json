@@ -10,6 +10,7 @@
         "url": "https://purplehorrorrus.github.io"
     },
     "repository": "https://github.com/PurpleHorrorRus/simple-trovo-api",
+    "keywords": ["API", "Trovo", "Trovo API", "Broadcasts", "Streams"],
     "scripts": {
         "lint": "eslint . --ext .ts",
         "clean": "rimraf lib/ && rimraf types/",
