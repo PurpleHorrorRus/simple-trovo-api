@@ -12,7 +12,8 @@
     "repository": "https://github.com/PurpleHorrorRus/simple-trovo-api",
     "scripts": {
         "lint": "eslint . --ext .ts",
-        "build": "tsc --build --clean",
+        "clean": "rimraf lib/ && rimraf types/",
+        "build": "yarn clean && tsc",
         "test": "jest"
     },
     "devDependencies": {
