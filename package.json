@@ -2,7 +2,7 @@
     "name": "simple-trovo-api",
     "version": "1.0.0",
     "main": "index.js",
-    "types": "index.d.ts",
+    "types": "types/index.d.ts",
     "license": "MIT",
     "author": {
         "email": "purplehorrorrus@gmail.com",
@@ -12,7 +12,7 @@
     "repository": "https://github.com/PurpleHorrorRus/simple-trovo-api",
     "scripts": {
         "lint": "eslint . --ext .ts",
-        "build": "tsc",
+        "build": "tsc --build --clean",
         "test": "jest"
     },
     "devDependencies": {
