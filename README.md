@@ -60,7 +60,7 @@ You can to specify config for chat service.
 Example:
 
 ```javascript
-Trovo.chat.service.on("connected", () => {
+Trovo.chat.service.on("ready", () => {
 
     /*
         Listen messages.
