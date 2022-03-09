@@ -15,8 +15,7 @@ class ChatService extends EventEmitter {
     socket: WebSocket;
     heartbeat: NodeJS.Timer;
 
-    // Watching only new messages
-    private lastMessageTime: number = this.updateTime();
+    private lastMessageTime: number = 0;
 
     constructor() {
         super();
@@ -78,6 +77,11 @@ class ChatService extends EventEmitter {
                 
                 if (connected) {
                     this.emit("connected");
+
+                    // Watch only new messages
+                    if (!this.config.fetchAllMessages) {
+                        this.lastMessageTime = this.updateTime();
+                    }
                     
                     this.heartbeat = setInterval(() => {
                         this.send("PING", this.nonces.PING);
