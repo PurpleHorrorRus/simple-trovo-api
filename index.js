@@ -12,6 +12,9 @@ const channel_1 = __importDefault(require("./lib/modules/channel"));
 const channels_1 = __importDefault(require("./lib/modules/channels"));
 const chat_1 = __importDefault(require("./lib/modules/chat"));
 const scopes_json_1 = __importDefault(require("./lib/scopes.json"));
+const defaultChatServiceConfig = {
+    fetchAllMessages: false
+};
 class TrovoAPI {
     constructor(config) {
         this.headers = new node_fetch_1.Headers();
@@ -19,7 +22,7 @@ class TrovoAPI {
         this.categories = new categories_1.default(this.headers);
         this.channel = new channel_1.default(this.headers);
         this.channels = new channels_1.default(this.headers);
-        this.chat = new chat_1.default(this.headers);
+        config.chatServiceConfig = config.chatServiceConfig || defaultChatServiceConfig;
         this.config = config;
         if (!("access_token" in config)) {
             console.warn("You must to specify redirect_uri");
@@ -28,6 +31,7 @@ class TrovoAPI {
             this.headers.set("Accept", "application/json");
             this.headers.set("Client-ID", this.config.client_id);
             this.headers.set("Authorization", `OAuth ${this.config.access_token}`);
+            this.chat = new chat_1.default(this.headers, config.chatServiceConfig);
         }
     }
     getAuthLink(scopes = [], redirect_uri) {

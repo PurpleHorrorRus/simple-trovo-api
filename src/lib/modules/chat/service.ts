@@ -1,7 +1,7 @@
 import EventEmitter from "events";
 import WebSocket from "ws";
 
-import { ChatMessage, WSMesageData, WSMessage } from "../../interfaces/chat";
+import { ChatServiceConfig, ChatMessage, WSMesageData, WSMessage } from "../../interfaces/chat";
 
 class ChatService extends EventEmitter { 
     private endpoint: string = "wss://open-chat.trovo.live/chat";
@@ -12,13 +12,16 @@ class ChatService extends EventEmitter {
         PING: "client-ping"
     };
 
+    config: ChatServiceConfig;
     socket: WebSocket;
     heartbeat: NodeJS.Timer;
 
     private lastMessageTime: number = 0;
 
-    constructor() {
+    constructor(config: ChatServiceConfig) {
         super();
+
+        this.config = config;
     }
 
     connect(token: string): Promise<boolean | void> {

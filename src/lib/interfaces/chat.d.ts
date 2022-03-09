@@ -1,3 +1,7 @@
+export interface ChatServiceConfig {
+    fetchAllMessages: boolean = false
+}
+
 export interface WSMesageData {
     [key: string]: string | Array<any>
 }
