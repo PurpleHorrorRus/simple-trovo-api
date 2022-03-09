@@ -49,14 +49,25 @@ const { TrovoAPI } = require("simple-trovo-api");
 
 ### Chat connection
 
-Trovo uses simple WebSocket connection to receive messages from your chat and simple-trovo-api realize some events to interact with. Before using chat service you must to refresh chat token every time. 
+Trovo uses simple WebSocket connection to receive messages from your chat and simple-trovo-api realize some events to interact with. Before using chat service you must to refresh chat token on every connecting or reconnecting.
+
+You can to specify config for chat service.
+
+| Param | Required | Type | Description |
+| :--- | :---: | :---: | :--- |
+| fetchAllMessages | false | boolean | Receive all past messages on connection |
 
 Example:
 
 ```javascript
 Trovo.chat.service.on("connected", () => {
 
-    // Listen messages
+    /*
+        Listen messages.
+        If you specified fetchAllMessages: true, this event will emit an array of messages at first launch.
+        This event will emit a message object.
+    */   
+
     Trovo.chat.service.on("message", message => {
         console.log(message);
     });
@@ -67,5 +78,5 @@ Trovo.chat.service.on("disconnected", error => {
 });
 
 const token = await Trovo.chat.token();
-Trovo.chat.service.connect(token);
+Trovo.chat.service.connect(token, chatServiceConfig?);
 ```
