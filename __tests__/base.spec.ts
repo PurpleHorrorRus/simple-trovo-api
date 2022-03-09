@@ -22,7 +22,7 @@ beforeAll(async () => {
 
     const chatToken = await Trovo.chat.token();
     await new Promise(resolve => {
-        Trovo.chat.service.once("connected", () => { 
+        Trovo.chat.service.once("ready", () => {
             console.log("Chat has been connected");
             return resolve(true);
         });
