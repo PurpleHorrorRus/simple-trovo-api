@@ -33,7 +33,7 @@ export class TrovoAPI {
         }
     }
     
-    getAuthLink(scopes: Array<string> = [], redirect_uri: string): string | Error {
+    getAuthLink(scopes: string[] = [], redirect_uri: string): string | Error {
         if (scopes.length === 0) {
             scopes = defaultScopes;
         }
