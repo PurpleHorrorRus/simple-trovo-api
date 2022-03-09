@@ -2,6 +2,7 @@ import EventEmitter from "events";
 import WebSocket from "ws";
 
 import { ChatServiceConfig, ChatMessage, WSMesageData, WSMessage } from "../../interfaces/chat";
+import { WSHandler } from "../../types/chat";
 
 class ChatService extends EventEmitter { 
     private endpoint: string = "wss://open-chat.trovo.live/chat";
@@ -26,7 +27,7 @@ class ChatService extends EventEmitter {
         super();
     }
 
-    connect(token: string, chatServiceConfig: ChatServiceConfig = {}): Promise<boolean> | boolean {
+    connect(token: string, chatServiceConfig: ChatServiceConfig = {}): WSHandler {
         if (this.connected) {
             return false;
         }
@@ -38,16 +39,19 @@ class ChatService extends EventEmitter {
 
         this.socket = new WebSocket(this.endpoint);
         this.socket.onopen = () => {
+            this.emit("connected");
             this.send("AUTH", this.nonces.AUTH, { token });
             this.connected = true;
         };
 
         return new Promise((resolve, reject) => { 
-            this.socket.onmessage = message => { 
-                const response = this.messageHandler(message);
-                return !response.error
-                    ? resolve(response)
-                    : reject(this.disconnect(response.error));
+            this.socket.onmessage = message => {
+                try {
+                    const response: WSHandler = this.messageHandler(message);
+                    return resolve(response);
+                } catch (error) {
+                    return reject(this.disconnect(error));
+                }
             };
             
             this.socket.onerror = async error => {
@@ -72,11 +76,11 @@ class ChatService extends EventEmitter {
         return true;
     }
 
-    messageHandler(message: WebSocket.MessageEvent): any {
-        const response = JSON.parse(message.data.toString());
+    messageHandler(message: WebSocket.MessageEvent): WSHandler {
+        const response: any = JSON.parse(message.data.toString());
 
         if (response.error) {
-            return response;
+            throw new Error(response.error);
         }
         
         switch (response.type) { 
@@ -84,8 +88,6 @@ class ChatService extends EventEmitter {
                 const connected: boolean = !("error" in response) && response.nonce === this.nonces.AUTH;
                 
                 if (connected) {
-                    this.emit("connected");
-
                     // Watch only new messages
                     if (!this.config.fetchAllMessages) {
                         this.lastMessageTime = this.updateTime();
@@ -95,6 +97,8 @@ class ChatService extends EventEmitter {
                         this.send("PING", this.nonces.PING);
                         this.emit("heartbeat");
                     }, this.heartbeatRate * 1000);
+
+                    this.emit("ready");
                 }
                 
                 return connected;
@@ -121,6 +125,8 @@ class ChatService extends EventEmitter {
                 return true;
             }
         }
+
+        return false;
     }
 
     updateTime(): number {
