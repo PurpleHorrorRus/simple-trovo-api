@@ -175,3 +175,7 @@ describe("Chat", () => {
         expect(response).toBeTruthy();
     });
 });
+
+afterAll(() => {
+    Trovo.chat.command("clear", user_id);
+});
