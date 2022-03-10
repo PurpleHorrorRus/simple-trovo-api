@@ -4,10 +4,6 @@ import Static from "./static";
 
 import { TrovoRequestType } from "./types/primary";
 
-type TrovoRequestInit = RequestInit & {
-    ignoreStatus?: boolean
-};
-
 class TrovoRequests extends Static {
     private headers: Headers;
     private apiRoot = "https://open-api.trovo.live/openplatform";
@@ -18,18 +14,18 @@ class TrovoRequests extends Static {
         this.headers = headers;
     }
 
-    private async request(url: string, params: TrovoRequestInit = {}): TrovoRequestType {
+    private async request(url: string, params: RequestInit = {}): TrovoRequestType {
         const response = await fetch(url, {
             headers: this.headers,
             ...params
         });
         
-        return (params.method !== "PATCH" && params.method !== "DELETE" && params.method !== "PUT") || params.ignoreStatus
-            ? response.status === 200 ? await response.json() : this.handleError(response.statusText)
-            : response.status === 204;
+        return response.status === 200
+            ? await response.json()
+            : this.handleError(response.statusText);
     }
 
-    async requestEndpoint(endpoint: string, params: TrovoRequestInit = {}): TrovoRequestType {
+    public async requestEndpoint(endpoint: string, params: RequestInit = {}): TrovoRequestType {
         if (params.body) {
             params.method = "POST";
         }
