@@ -82,7 +82,7 @@ describe("Channels", () => {
 });
 
 describe("Channel", () => {
-    test("Edit Channel", async () => {
+    test.skip("Edit Channel", async () => {
         const game = await Trovo.categories.search("League of Legends");
         const response = await Trovo.channel.edit(user_id, "Stream title changed with simple-trovo-api", game.category_info[0].id);
         expect(response.empty).toBe("");
