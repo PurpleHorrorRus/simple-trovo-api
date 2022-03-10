@@ -125,7 +125,6 @@ class ChatService extends EventEmitter {
                 }
 
                 if (this.config.fetchAllMessages && this.lastMessageTime === 0) {
-                    this.lastMessageTime = this.updateTime();
                     return this.emitChatMessages(response.data.chats);
                 }
 
@@ -133,12 +132,9 @@ class ChatService extends EventEmitter {
                     return message.send_time > this.lastMessageTime;
                 });
 
-                if (newMessages.length > 0) {
-                    this.lastMessageTime = this.updateTime();
-                    return this.emitChatMessages(newMessages);
-                }
-
-                return false;
+                return newMessages.length > 0
+                    ? this.emitChatMessages(newMessages)
+                    : false;
             }
         }
 
@@ -149,6 +145,8 @@ class ChatService extends EventEmitter {
         messages.forEach((message: ChatMessage) => {
             this.emit(this.ChatMessageEvents[message.type] || "message", message);
         });
+
+        this.lastMessageTime = this.updateTime();
         
         return true;
     }
