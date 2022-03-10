@@ -23,3 +23,6 @@ jobs:
 
       - name: Run tests
         run: yarn test --forceExit
+        env:
+          CLIENT_ID: ${{ secrets.CLIENTID }}
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
