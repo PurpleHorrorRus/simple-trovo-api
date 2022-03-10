@@ -105,6 +105,10 @@ class ChatService extends EventEmitter {
             }
             
             case "CHAT": {
+                if (!response.data.chats) {
+                    return this.emit("message", []);
+                }
+
                 if (this.config.fetchAllMessages && this.lastMessageTime === 0) {
                     this.lastMessageTime = this.updateTime();
                     return this.emit("message", response.data.chats);
