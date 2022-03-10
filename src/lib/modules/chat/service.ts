@@ -2,7 +2,7 @@ import EventEmitter from "events";
 import WebSocket from "ws";
 
 import { ChatServiceConfig, ChatMessage, WSMesageData, WSMessage } from "../../interfaces/chat";
-import { WSHandler } from "../../types/chat";
+import { ChatMessageEventsType, WSHandler } from "../../types/chat";
 
 class ChatService extends EventEmitter { 
     private endpoint: string = "wss://open-chat.trovo.live/chat";
@@ -15,6 +15,21 @@ class ChatService extends EventEmitter {
     private nonces = {
         AUTH: "client-auth",
         PING: "client-ping"
+    };
+
+    public ChatMessageEvents: ChatMessageEventsType = {
+        0: "message",
+        5001: "subscribption",
+        5002: "system",
+        5003: "follow",
+        5004: "welcome",
+        5005: "gift_sub_random",
+        5006: "gift_sub",
+        5007: "activity",
+        5008: "raid",
+        5009: "custom_spell",
+        5012: "stream",
+        5013: "unfollow"
     };
 
     config: ChatServiceConfig;
@@ -106,12 +121,12 @@ class ChatService extends EventEmitter {
             
             case "CHAT": {
                 if (!response.data.chats) {
-                    return this.emit("message", []);
+                    return this.emitChatMessages([]);
                 }
 
                 if (this.config.fetchAllMessages && this.lastMessageTime === 0) {
                     this.lastMessageTime = this.updateTime();
-                    return this.emit("message", response.data.chats);
+                    return this.emitChatMessages(response.data.chats);
                 }
 
                 const newMessages: ChatMessage[] = response.data.chats.filter((message: ChatMessage) => {
@@ -119,18 +134,23 @@ class ChatService extends EventEmitter {
                 });
 
                 if (newMessages.length > 0) {
-                    newMessages.forEach((message: ChatMessage) => {
-                        this.emit("message", message);
-                    });
-
                     this.lastMessageTime = this.updateTime();
+                    return this.emitChatMessages(newMessages);
                 }
 
-                return true;
+                return false;
             }
         }
 
         return false;
+    }
+
+    emitChatMessages(messages: ChatMessage[]): boolean { 
+        messages.forEach((message: ChatMessage) => {
+            this.emit(this.ChatMessageEvents[message.type] || "message", message);
+        });
+        
+        return true;
     }
 
     updateTime(): number {
