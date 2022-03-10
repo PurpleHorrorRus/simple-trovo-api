@@ -21,8 +21,5 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: Build scripts
-        run: yarn build
-
       - name: Run tests
         run: yarn test --forceExit
