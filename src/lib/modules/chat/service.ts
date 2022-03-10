@@ -9,7 +9,7 @@ class ChatService extends EventEmitter {
     private connected: boolean = false;
     private heartbeatRate: number = 25;
     private defaultChatServiceConfig: ChatServiceConfig = {
-        fetchAllMessages: false
+        fetchPastMessages: false
     };
 
     private nonces = {
@@ -104,7 +104,7 @@ class ChatService extends EventEmitter {
                 
                 if (connected) {
                     // Watch only new messages
-                    if (!this.config.fetchAllMessages) {
+                    if (!this.config.fetchPastMessages) {
                         this.lastMessageTime = this.updateTime();
                     }
                     
@@ -124,7 +124,7 @@ class ChatService extends EventEmitter {
                     return this.emitChatMessages([]);
                 }
 
-                if (this.config.fetchAllMessages && this.lastMessageTime === 0) {
+                if (this.config.fetchPastMessages && this.lastMessageTime === 0) {
                     return this.emitChatMessages(response.data.chats);
                 }
 

@@ -1,7 +1,7 @@
 import { ChatMessageType } from "../types/chat";
 
 export interface ChatServiceConfig {
-    fetchAllMessages?: boolean
+    fetchPastMessages?: boolean
 }
 
 export interface WSMesageData {

@@ -1,13 +1,17 @@
 import "dotenv/config";
 
 import { TrovoAPI } from "../src/index";
-import { ChatMessage } from "../src/lib/interfaces/chat";
+import { ChatMessage, ChatServiceConfig } from "../src/lib/interfaces/chat";
 
 jest.setTimeout(60 * 1000 * 2);
 
 let Trovo: TrovoAPI;
 let user_id: number;
 let second_id: number;
+
+const ChatServiceConfig: ChatServiceConfig = {
+    fetchPastMessages: false
+};
 
 const testingUsers = ["InfiniteHorror", "Wara"];
 
@@ -32,9 +36,7 @@ beforeAll(async () => {
             console.log("Disconnected Event", error);
         });
     
-        Trovo.chat.service.connect(chatToken, {
-            fetchAllMessages: false
-        });
+        Trovo.chat.service.connect(chatToken, ChatServiceConfig);
     });
 });
 
@@ -139,10 +141,16 @@ describe("Chat", () => {
     test("Receive message", async () => {
         const message: ChatMessage = await new Promise(resolve => {
             Trovo.chat.service.on("message", resolve);
-            Trovo.chat.send("Sended from simple-trovo-api");
+
+            !ChatServiceConfig.fetchPastMessages
+                ? Trovo.chat.send("Sended from simple-trovo-api")
+                : console.log("Waiting for a message from chat...");
         });
 
-        Trovo.chat.delete(user_id, message.message_id, message.uid);
+        if (!ChatServiceConfig.fetchPastMessages) {
+            Trovo.chat.delete(user_id, message.message_id, message.uid);
+        }
+
         expect(message).toBeTruthy();
     });
 

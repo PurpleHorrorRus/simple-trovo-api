@@ -55,7 +55,7 @@ You can to specify config for chat service.
 
 | Param | Required | Type | Description |
 | :--- | :---: | :---: | :--- |
-| fetchAllMessages | false | boolean | Receive all past messages on connection |
+| fetchPastMessages | false | boolean | Receive all past messages on connection |
 
 Example:
 
@@ -64,8 +64,7 @@ Trovo.chat.service.on("ready", () => {
 
     /*
         Listen messages.
-        If you specified fetchAllMessages: true, this event will emit an array of messages at first launch.
-        This event will emit a message object.
+        If you specified fetchPastMessages: true, this event will emit every past messages at first launch.
     */   
 
     Trovo.chat.service.on("message", message => {
