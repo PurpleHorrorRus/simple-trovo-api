@@ -17,6 +17,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16.8.0
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
         run: yarn
@@ -26,6 +27,9 @@ jobs:
         env:
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Build scripts
+        run: yarn build
 
       - name: Publish
         run: npm publish
