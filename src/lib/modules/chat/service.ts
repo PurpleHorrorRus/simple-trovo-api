@@ -132,9 +132,7 @@ class ChatService extends EventEmitter {
                     return message.send_time > this.lastMessageTime;
                 });
 
-                return newMessages.length > 0
-                    ? this.emitChatMessages(newMessages)
-                    : false;
+                return this.emitChatMessages(newMessages);
             }
         }
 
@@ -142,13 +140,15 @@ class ChatService extends EventEmitter {
     }
 
     emitChatMessages(messages: ChatMessage[]): boolean { 
-        messages.forEach((message: ChatMessage) => {
-            this.emit(this.ChatMessageEvents[message.type] || "message", message);
-        });
-
         this.lastMessageTime = this.updateTime();
-        
-        return true;
+
+        if (messages.length > 0) {
+            messages.forEach((message: ChatMessage) => {
+                this.emit(this.ChatMessageEvents[message.type] || "message", message);
+            });
+        }
+
+        return messages.length > 0;
     }
 
     updateTime(): number {
