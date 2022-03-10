@@ -70,6 +70,16 @@ Trovo.chat.service.on("ready", () => {
     Trovo.chat.service.on("message", message => {
         console.log(message);
     });
+
+
+    /*
+        Listen for a special events.
+        See list of available events above.
+    */
+
+    Trovo.chat.service.on("follow", follow => {
+        console.log(`Thank you for following, ${follow.nick_name}!`);
+    });
 });
 
 Trovo.chat.service.on("disconnected", error => {
@@ -79,3 +89,11 @@ Trovo.chat.service.on("disconnected", error => {
 const token = await Trovo.chat.token();
 Trovo.chat.service.connect(token, chatServiceConfig?);
 ```
+
+Chat service has an listeners for special events in chat. There is a list of events.
+
+```
+subscription, system, follow, welcome, gift_sub_random, gift_sub, activity, raid, custom_spell, stream, unfollow
+```
+
+All messages of magic chat mark as default messages and not included to the special events.
