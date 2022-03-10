@@ -1,5 +1,6 @@
 __tests__
 .vscode
+.github
 coverage
 node_modules
 src
