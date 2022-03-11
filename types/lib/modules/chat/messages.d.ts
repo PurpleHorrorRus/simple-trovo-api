@@ -3,6 +3,7 @@ import EventEmitter from "events";
 import { ChatMessage, ChatServiceMessagesConfig } from "../../interfaces/chat";
 import { ChatMessageEventsType } from "../../types/chat";
 declare class ChatMessages extends EventEmitter {
+    private avatarEndpoint;
     private lastMessageTime;
     private config;
     ChatMessageEvents: ChatMessageEventsType;
