@@ -66,12 +66,12 @@ TrovoChat.on(TrovoChat.events.READY, () => {
     console.log("Trovo chat has been connected");
 
     // Listen chat messages (regular messages and magic chat)
-    TrovoChat.on("message", message => {
+    TrovoChat.messages.on("message", message => {
         console.log(message);
     });
 
-    // Listen special events
-    TrovoChat.on(TrovoChat.specialEvents.FOLLOW, follow => {
+    // Listen special message events
+    TrovoChat.messages.on(TrovoChat.messages.events.FOLLOW, follow => {
         console.log(`Thank you for following, ${follow.nick_name}!`);
     });
 });

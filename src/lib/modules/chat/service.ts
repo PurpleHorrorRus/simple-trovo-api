@@ -2,17 +2,20 @@ import EventEmitter from "events";
 import WebSocket, { Options } from "reconnecting-websocket";
 import ws from "ws";
 
-import { ChatServiceConfig, ChatMessage, WSMesageData, WSMessage } from "../../interfaces/chat";
-import { ChatMessageEventsType, WSHandler } from "../../types/chat";
+import ChatMessages from "./messages";
+
+import { ChatServiceConfig, WSMesageData, WSMessage } from "../../interfaces/chat";
+import { WSHandler } from "../../types/chat";
+
+const defaultChatServiceConfig: ChatServiceConfig = {
+    messages: {
+        fetchPastMessages: false
+    }
+};
 
 class ChatService extends EventEmitter { 
     private endpoint: string = "wss://open-chat.trovo.live/chat";
-    private lastMessageTime: number = 0;
     private heartbeatRate: number = 25;
-
-    private defaultChatServiceConfig: ChatServiceConfig = {
-        fetchPastMessages: false
-    };
 
     private WebSocketParams: Options = {
         WebSocket: ws,
@@ -45,44 +48,19 @@ class ChatService extends EventEmitter {
     public connected: boolean = false;
     public authorized: boolean = false;
 
-    public ChatMessageEvents: ChatMessageEventsType = {
-        5001: "subscribption",
-        5002: "system",
-        5003: "follow",
-        5004: "welcome",
-        5005: "gift_sub_random",
-        5006: "gift_sub",
-        5007: "activity",
-        5008: "raid",
-        5009: "custom_spell",
-        5012: "stream",
-        5013: "unfollow"
-    };
-
-    public specialEvents = {
-        MESSAGE: this.ChatMessageEvents[0],
-        SUBSCRIPTION: this.ChatMessageEvents[5001],
-        SYSTEM: this.ChatMessageEvents[5002],
-        FOLLOW: this.ChatMessageEvents[5003],
-        WELCOME: this.ChatMessageEvents[5004],
-        GIFT_SUB_RANDOM: this.ChatMessageEvents[5005],
-        GIFT_SUB: this.ChatMessageEvents[5006],
-        ACTIVITY: this.ChatMessageEvents[5007],
-        RADI: this.ChatMessageEvents[5008],
-        CUSTOM_SPELL: this.ChatMessageEvents[5009],
-        STREAM: this.ChatMessageEvents[5012],
-        UNFOLLOW: this.ChatMessageEvents[5013],
-    };
-
     config: ChatServiceConfig;
     socket: WebSocket;
     heartbeat: NodeJS.Timer;
 
-    constructor(chatServiceConfig: ChatServiceConfig = {}) {
+    messages: ChatMessages;
+
+    constructor(chatServiceConfig: ChatServiceConfig = defaultChatServiceConfig) {
         super();
 
+        this.messages = new ChatMessages(chatServiceConfig.messages);
+
         this.config = {
-            ...this.defaultChatServiceConfig,
+            ...defaultChatServiceConfig,
             ...chatServiceConfig
         };
 
@@ -147,7 +125,7 @@ class ChatService extends EventEmitter {
             }
             
             case this.handles.MESSAGE: {
-                const result = this.onMessage(response);
+                const result = this.messages.handle(response);
                 return Promise.resolve(result);
             }
         }
@@ -157,8 +135,8 @@ class ChatService extends EventEmitter {
 
     onAuth(): boolean { 
         // Watch only new messages
-        if (!this.config.fetchPastMessages) {
-            this.updateTime();
+        if (!this.config.messages?.fetchPastMessages) {
+            this.messages.updateTime();
         }
         
         this.heartbeat = setInterval(() => {
@@ -167,46 +145,6 @@ class ChatService extends EventEmitter {
         }, this.heartbeatRate * 1000);
 
         return this.emit(this.events.READY);
-    }
-
-    onMessage(response: any): boolean {
-        if (!response.data.chats) {
-            return this.emitChatMessages([]);
-        }
-
-        if (this.config.fetchPastMessages && this.lastMessageTime === 0) {
-            return this.emitChatMessages(response.data.chats);
-        }
-
-        const newMessages: ChatMessage[] = this.getNewMessages(response.data.chats);
-        return this.emitChatMessages(newMessages);
-    }
-
-    getNewMessages(messages: ChatMessage[]): ChatMessage[] { 
-        const newMessages: ChatMessage[] = messages.filter((message: ChatMessage) => {
-            return message.send_time > this.lastMessageTime;
-        });
-        
-        return newMessages;
-    }
-
-    emitChatMessages(messages: ChatMessage[]): boolean {
-        if (messages.length > 0) {
-            messages.forEach((message: ChatMessage) => {
-                const event: string = this.ChatMessageEvents[message.type] || "message";
-                return this.emit(event, message);
-            });
-        }
-
-        const time: number = messages.length > 0 ? messages[messages.length - 1].send_time : Date.now();
-        this.updateTime(time);
-
-        return messages.length > 0;
-    }
-
-    updateTime(time = Date.now()): number {
-        this.lastMessageTime = Number(time.toString().substring(0, 10));
-        return this.lastMessageTime;
     }
 }
 

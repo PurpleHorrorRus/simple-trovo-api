@@ -12,7 +12,9 @@ let user_id: number;
 let second_id: number;
 
 const chatConfig: ChatServiceConfig = {
-    fetchPastMessages: false
+    messages: {
+        fetchPastMessages: false
+    }
 };
 
 const testingUsers = ["InfiniteHorror", "Wara"];
@@ -137,14 +139,14 @@ describe("Channel", () => {
 describe("Chat", () => {
     test("Receive message", async () => {
         const message: ChatMessage = await new Promise(resolve => {
-            TrovoChat.on("message", resolve);
+            TrovoChat.messages.on("message", resolve);
 
-            if (!chatConfig.fetchPastMessages) {
+            if (!chatConfig.messages?.fetchPastMessages) {
                 Trovo.chat.send("Sended from simple-trovo-api")
             }
         });
 
-        if (!chatConfig.fetchPastMessages) {
+        if (!chatConfig.messages?.fetchPastMessages) {
             Trovo.chat.delete(user_id, message.message_id, message.uid);
         }
 
@@ -158,7 +160,7 @@ describe("Chat", () => {
 
     test.skip("Stay alive", async () => {
         await new Promise(() => {
-            TrovoChat.on("message", message => {
+            TrovoChat.messages.on("message", message => {
                 console.log(`${message.nick_name}: ${message.content}`);
             });
         });
@@ -166,7 +168,7 @@ describe("Chat", () => {
 
     test.skip("Delete Message", async () => {
         await new Promise(resolve => {
-            TrovoChat.once("message", async message => { 
+            TrovoChat.messages.once("message", async message => { 
                 await Trovo.chat.delete(user_id, message.message_id, message.uid);
                 return resolve(true);
             });
