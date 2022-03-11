@@ -142,7 +142,7 @@ describe("Chat", () => {
             TrovoChat.messages.on("message", resolve);
 
             if (!chatConfig.messages?.fetchPastMessages) {
-                Trovo.chat.send("Sended from simple-trovo-api")
+                Trovo.chat.send("Sended from simple-trovo-api");
             }
         });
 
