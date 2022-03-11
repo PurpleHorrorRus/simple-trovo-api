@@ -25,5 +25,6 @@ declare class ChatMessages extends EventEmitter {
     emitChatMessages(messages: ChatMessage[]): boolean;
     getNewMessages(messages: ChatMessage[]): ChatMessage[];
     updateTime(time?: number): number;
+    fixAvatar(file: string): string;
 }
 export default ChatMessages;

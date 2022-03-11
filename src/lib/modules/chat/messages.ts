@@ -59,6 +59,7 @@ class ChatMessages extends EventEmitter {
     emitChatMessages(messages: ChatMessage[]): boolean {
         if (messages.length > 0) {
             messages.forEach((message: ChatMessage) => {
+                message.avatar = this.fixAvatar(message.avatar);
                 const event: string = this.ChatMessageEvents[message.type] || "message";
                 return this.emit(event, message);
             });
@@ -81,6 +82,12 @@ class ChatMessages extends EventEmitter {
     updateTime(time = Date.now()): number {
         this.lastMessageTime = Number(time.toString().substring(0, 10));
         return this.lastMessageTime;
+    }
+
+    fixAvatar(file: string): string { // In Trovo, paths to avatars sometimes break down.
+        return !/https:/.test(file)
+            ? `https://headicon.trovo.live/user/${file}`
+            : file;
     }
 }
 
