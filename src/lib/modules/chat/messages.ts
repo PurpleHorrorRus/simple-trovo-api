@@ -81,7 +81,7 @@ class ChatMessages extends EventEmitter {
     }
 
     updateTime(time = Date.now()): number {
-        this.lastMessageTime = Number(time.toString().substring(0, 10));
+        this.lastMessageTime = Math.floor(time / 1000);
         return this.lastMessageTime;
     }
 
