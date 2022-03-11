@@ -35,7 +35,10 @@ class Chat extends TrovoRequests {
             this.service.on(this.service.events.CONNECTED, async () => {
                 resolve(this.service);
 
-                const token = await this.token();
+                const token = chatServiceConfig.user_id
+                    ? await this.channelToken(chatServiceConfig.user_id)
+                    : await this.token();
+                
                 this.service.connect(token);
             });
         });

@@ -5,6 +5,7 @@ interface ChatServiceMessagesConfig {
 }
 
 export interface ChatServiceConfig {
+    user_id?: number
     messages?: ChatServiceMessagesConfig
 }
 
