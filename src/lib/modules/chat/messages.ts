@@ -1,7 +1,7 @@
 import EventEmitter from "events";
 
 import { ChatMessage, ChatServiceMessagesConfig } from "../../interfaces/chat";
-import { ChatMessageEventsType } from "../../types/chat";
+import { ChatMessageEventsType, ChatSpecialEventType } from "../../types/chat";
 
 class ChatMessages extends EventEmitter { 
     private avatarEndpoint: string = "https://headicon.trovo.live/user";
@@ -23,7 +23,7 @@ class ChatMessages extends EventEmitter {
         5013: "unfollow"
     };
 
-    public events = {
+    public events: ChatSpecialEventType = {
         SUBSCRIPTION: this.ChatMessageEvents[5001],
         SYSTEM: this.ChatMessageEvents[5002],
         FOLLOW: this.ChatMessageEvents[5003],
