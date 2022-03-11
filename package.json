@@ -43,7 +43,6 @@
     },
     "dependencies": {
         "node-fetch": "2.6.7",
-        "reconnecting-websocket": "^4.4.0",
-        "ws": "^8.5.0"
+        "reconnecting-websocket": "^4.4.0"
     }
 }
