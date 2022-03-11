@@ -61,6 +61,7 @@ Example:
 
 ```javascript
 const TrovoChat = await Trovo.chat.connect(chatServiceConfig?);
+
 TrovoChat.on(TrovoChat.events.READY, () => {
     console.log("Trovo chat has been connected");
 
