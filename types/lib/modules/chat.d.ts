@@ -2,6 +2,7 @@ import { Headers } from "node-fetch";
 import ChatService from "./chat/service";
 import TrovoRequests from "../requests";
 import { TrovoRequestType } from "../types/primary";
+import { ChatServiceConfig } from "../interfaces/chat";
 declare class Chat extends TrovoRequests {
     service: ChatService;
     userRoles: {
@@ -18,6 +19,7 @@ declare class Chat extends TrovoRequests {
         ace_plus: number;
     };
     constructor(headers: Headers);
+    connect(chatServiceConfig?: ChatServiceConfig): Promise<ChatService>;
     token(): TrovoRequestType;
     channelToken(channelID: number): Promise<string>;
     send(content: string, channel_id?: number | string): TrovoRequestType;
