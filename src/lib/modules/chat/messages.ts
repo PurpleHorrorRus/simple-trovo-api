@@ -64,10 +64,10 @@ class ChatMessages extends EventEmitter {
                 const event: string = this.ChatMessageEvents[message.type] || "message";
                 return this.emit(event, message);
             });
-        }
 
-        const time: number = messages.length > 0 ? messages[messages.length - 1].send_time : Date.now();
-        this.updateTime(time);
+            const time = messages[messages.length - 1].send_time;
+            this.updateTime(time);
+        } else this.updateTime();
 
         return messages.length > 0;
     }
@@ -80,8 +80,8 @@ class ChatMessages extends EventEmitter {
         return newMessages;
     }
 
-    updateTime(time = Date.now()): number {
-        this.lastMessageTime = Math.floor(time / 1000);
+    updateTime(time = Math.floor(Date.now() / 1000)): number {
+        this.lastMessageTime = time;
         return this.lastMessageTime;
     }
 
