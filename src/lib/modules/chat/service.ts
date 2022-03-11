@@ -94,6 +94,7 @@ class ChatService extends EventEmitter {
         if (this.connected) {
             this.connected = false;
             this.authorized = false;
+            clearInterval(this.heartbeat);
             return this.emit(this.events.DISCONNECTED, error);
         }
 
