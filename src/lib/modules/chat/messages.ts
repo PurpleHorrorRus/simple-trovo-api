@@ -84,7 +84,7 @@ class ChatMessages extends EventEmitter {
         return this.lastMessageTime;
     }
 
-    fixAvatar(file: string): string { // In Trovo, paths to avatars sometimes break down.
+    fixAvatar(file: string): string {
         return !/https:/.test(file)
             ? `https://headicon.trovo.live/user/${file}`
             : file;
