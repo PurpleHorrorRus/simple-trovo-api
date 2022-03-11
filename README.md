@@ -60,34 +60,24 @@ You can to specify config for chat service.
 Example:
 
 ```javascript
-Trovo.chat.service.on("ready", () => {
+const TrovoChat = await Trovo.chat.connect(chatServiceConfig?);
+TrovoChat.on(TrovoChat.events.READY, () => {
+    console.log("Trovo chat has been connected");
 
-    /*
-        Listen messages.
-        If you specified fetchPastMessages: true, this event will emit every past messages at first launch.
-    */   
-
-    Trovo.chat.service.on("message", message => {
+    // Listen chat messages (regular messages and magic chat)
+    TrovoChat.on("message", message => {
         console.log(message);
     });
 
-
-    /*
-        Listen for a special events.
-        See list of available events above.
-    */
-
-    Trovo.chat.service.on("follow", follow => {
+    // Listen special events
+    TrovoChat.on(TrovoChat.specialEvents.FOLLOW, follow => {
         console.log(`Thank you for following, ${follow.nick_name}!`);
     });
 });
 
-Trovo.chat.service.on("disconnected", error => {
-    console.error("Trovo chat has been disconnected", error);
+TrovoChat.on(TrovoChat.events.DISCONNECTED, reason => {
+    console.error("Trovo chat has been disconnected", reason);
 });
-
-const token = await Trovo.chat.token();
-Trovo.chat.service.connect(token, chatServiceConfig?);
 ```
 
 Chat service has an listeners for special events in chat. There is a list of events.

@@ -5,9 +5,10 @@ import ChatService from "./chat/service";
 
 import TrovoRequests from "../requests";
 import { TrovoRequestType } from "../types/primary";
+import { ChatServiceConfig } from "../interfaces/chat";
 
 class Chat extends TrovoRequests {
-    public service: ChatService = new ChatService();
+    public service: ChatService;
 
     public userRoles = {
         streamer: 100000,
@@ -25,6 +26,19 @@ class Chat extends TrovoRequests {
     
     constructor(headers: Headers) {
         super(headers);
+    }
+
+    async connect(chatServiceConfig: ChatServiceConfig = {}): Promise<ChatService> { 
+        this.service = new ChatService(chatServiceConfig);
+
+        return new Promise(resolve => {
+            this.service.on(this.service.events.CONNECTED, async () => {
+                resolve(this.service);
+
+                const token = await this.token();
+                this.service.connect(token);
+            });
+        });
     }
     
     async token(): TrovoRequestType {

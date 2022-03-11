@@ -1,15 +1,17 @@
 import "dotenv/config";
 
 import { TrovoAPI } from "../src/index";
+import ChatService from "../src/lib/modules/chat/service";
 import { ChatMessage, ChatServiceConfig } from "../src/lib/interfaces/chat";
 
 jest.setTimeout(60 * 1000 * 2);
 
 let Trovo: TrovoAPI;
+let TrovoChat: ChatService;
 let user_id: number;
 let second_id: number;
 
-const ChatServiceConfig: ChatServiceConfig = {
+const chatConfig: ChatServiceConfig = {
     fetchPastMessages: false
 };
 
@@ -25,18 +27,13 @@ beforeAll(async () => {
     user_id = Number(users[0].user_id);
     second_id = Number(users[1].user_id);
 
-    const chatToken = await Trovo.chat.token();
-    return await new Promise(resolve => {
-        Trovo.chat.service.once("ready", () => {
-            console.log("Chat has been connected");
-            return resolve(true);
-        });
-
-        Trovo.chat.service.once("disconnected", error => {
-            console.log("Disconnected Event", error);
-        });
+    TrovoChat = await Trovo.chat.connect(chatConfig);
+    TrovoChat.on(TrovoChat.events.READY, () => {
+        console.log("Chat has been connected");
+    });
     
-        Trovo.chat.service.connect(chatToken, ChatServiceConfig);
+    TrovoChat.on(TrovoChat.events.DISCONNECTED, event => { 
+        console.log("Chat has been disconnected", event);
     });
 });
 
@@ -96,7 +93,7 @@ describe("Channel", () => {
     });
 
     test("Get Followers", async () => {
-        let result: Array<any> = [];
+        let result: any[] = [];
 
         let followers = await Trovo.channel.followers(second_id, 100);
         result = followers.follower;
@@ -140,14 +137,14 @@ describe("Channel", () => {
 describe("Chat", () => {
     test("Receive message", async () => {
         const message: ChatMessage = await new Promise(resolve => {
-            Trovo.chat.service.on("message", resolve);
+            TrovoChat.on("message", resolve);
 
-            !ChatServiceConfig.fetchPastMessages
-                ? Trovo.chat.send("Sended from simple-trovo-api")
-                : console.log("Waiting for a message from chat...");
+            if (!chatConfig.fetchPastMessages) {
+                Trovo.chat.send("Sended from simple-trovo-api")
+            }
         });
 
-        if (!ChatServiceConfig.fetchPastMessages) {
+        if (!chatConfig.fetchPastMessages) {
             Trovo.chat.delete(user_id, message.message_id, message.uid);
         }
 
@@ -161,7 +158,7 @@ describe("Chat", () => {
 
     test.skip("Stay alive", async () => {
         await new Promise(() => {
-            Trovo.chat.service.on("message", message => {
+            TrovoChat.on("message", message => {
                 console.log(`${message.nick_name}: ${message.content}`);
             });
         });
@@ -169,7 +166,7 @@ describe("Chat", () => {
 
     test.skip("Delete Message", async () => {
         await new Promise(resolve => {
-            Trovo.chat.service.once("message", async message => { 
+            TrovoChat.once("message", async message => { 
                 await Trovo.chat.delete(user_id, message.message_id, message.uid);
                 return resolve(true);
             });
