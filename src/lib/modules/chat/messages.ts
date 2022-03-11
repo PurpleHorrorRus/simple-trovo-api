@@ -24,7 +24,6 @@ class ChatMessages extends EventEmitter {
     };
 
     public events = {
-        MESSAGE: this.ChatMessageEvents[0],
         SUBSCRIPTION: this.ChatMessageEvents[5001],
         SYSTEM: this.ChatMessageEvents[5002],
         FOLLOW: this.ChatMessageEvents[5003],

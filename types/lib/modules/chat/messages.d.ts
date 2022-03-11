@@ -8,7 +8,6 @@ declare class ChatMessages extends EventEmitter {
     private config;
     ChatMessageEvents: ChatMessageEventsType;
     events: {
-        MESSAGE: string;
         SUBSCRIPTION: string;
         SYSTEM: string;
         FOLLOW: string;
