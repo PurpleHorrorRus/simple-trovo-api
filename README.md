@@ -53,9 +53,11 @@ Trovo uses simple WebSocket connection to receive messages from your chat and si
 
 You can to specify config for chat service.
 
-| Param | Required | Type | Description |
+### ChatServiceConfig
+| Name | Required | Type | Description |
 | :--- | :---: | :---: | :--- |
-| fetchPastMessages | false | boolean | Receive all past messages on connection |
+| user_id | false | number | ID of channel you want to connect. Script will fetch chat token of specified channel or your chat token by default if is not specified |
+| messages.fetchPastMessages | false | boolean | Receive all past messages on connection |
 
 Example:
 
