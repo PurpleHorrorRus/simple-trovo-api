@@ -4,7 +4,7 @@ import { ChatMessage, ChatServiceMessagesConfig } from "../../interfaces/chat";
 import { ChatMessageEventsType, ChatSpecialEventType } from "../../types/chat";
 
 class ChatMessages extends EventEmitter { 
-    private avatarEndpoint: string = "https://headicon.trovo.live/user";
+    private avatarEndpoint: string = "https://headicon.trovo.live";
     private lastMessageTime: number = 0;
 
     private config: ChatServiceMessagesConfig;
@@ -86,7 +86,7 @@ class ChatMessages extends EventEmitter {
 
     fixAvatar(file: string): string {
         return !~file.indexOf(this.avatarEndpoint)
-            ? `${this.avatarEndpoint}/${file}`
+            ? `${this.avatarEndpoint}/user/${file}`
             : file;
     }
 }
