@@ -137,7 +137,7 @@ describe("Channel", () => {
 });
 
 describe("Chat", () => {
-    test("Receive message", async () => {
+    test.skip("Receive message", async () => {
         const message: ChatMessage = await new Promise(resolve => {
             TrovoChat.messages.on("message", resolve);
 
