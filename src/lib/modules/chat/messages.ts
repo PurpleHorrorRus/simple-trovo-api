@@ -84,8 +84,12 @@ class ChatMessages extends EventEmitter {
         return this.lastMessageTime;
     }
 
-    fixAvatar(file: string): string {
-        return !~file.indexOf(this.avatarEndpoint)
+    fixAvatar(file: string | undefined): string {
+        if (!file) { 
+            return "";
+        }
+
+        return !~file?.indexOf(this.avatarEndpoint)
             ? `${this.avatarEndpoint}/user/${file}`
             : file;
     }

@@ -23,7 +23,7 @@ export interface ChatMessage {
     type: ChatMessageType
     content: string
     nick_name: string
-    avatar: string
+    avatar?: string
     sub_lv?: string
     sub_tier: string
     medals: string[]
