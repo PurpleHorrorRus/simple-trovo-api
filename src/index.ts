@@ -89,7 +89,7 @@ export class TrovoAPI {
             this.update(credits);
             
             if (access_token) {
-                await this.validateWith();
+                await this.validateWithRefreshing();
                 return this;
              }
 
@@ -110,7 +110,7 @@ export class TrovoAPI {
             credits.refresh_token = fileContent.refresh_token;
             this.update(credits);
 
-            await this.validateWith();
+            await this.validateWithRefreshing();
 
             return this;
         }
@@ -118,7 +118,7 @@ export class TrovoAPI {
         throw new Error("Incorrect login credits");
     }
 
-    async validateWith(): TrovoRequestType { 
+    async validateWithRefreshing(): TrovoRequestType { 
         const response = await this.validate().catch(async () => {
             return await this.refresh().catch(e => {
                 throw new Error(e);

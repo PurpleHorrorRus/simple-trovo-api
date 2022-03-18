@@ -25,4 +25,5 @@ jobs:
         run: yarn test --forceExit
         env:
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
