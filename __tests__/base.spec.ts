@@ -29,7 +29,7 @@ beforeAll(async () => {
     });
 
     const access_token: string = process.env.ACCESS_TOKEN! || "";
-    const refresh_token: string = process.env.REFRESH_TOKEN || "";
+    const refresh_token: string = process.env.REFRESH_TOKEN! || "";
     await Trovo.auth(access_token, refresh_token);
     
     const { users } = await Trovo.users.get(testingUsers);

@@ -10,3 +10,4 @@ src
 .npmignore
 jest.config.js
 tsconfig.json
+credits.json

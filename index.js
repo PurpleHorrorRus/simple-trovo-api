@@ -68,32 +68,39 @@ class TrovoAPI {
             this.update({ access_token });
             return this;
         }
-        else if (this.config.credits) {
+        if (this.config.credits) {
             if (!fs_1.default.existsSync(this.config.credits)) {
                 throw new Error("Invalid credits path");
             }
-            let credits = {};
-            if (!access_token && !refresh_token) {
+            if (refresh_token) {
+                let credits = {
+                    access_token: "",
+                    refresh_token
+                };
+                if (access_token) {
+                    credits.access_token = access_token;
+                    this.update(credits);
+                    const response = await this.validate().catch(async () => {
+                        return await this.refresh().catch(e => {
+                            throw new Error(e);
+                        });
+                    });
+                    if (response.expire_ts) {
+                        const tokenTimestamp = new Date(Number(response.expire_ts) * 1000);
+                        const now = new Date(Date.now());
+                        const updateTimeout = tokenTimestamp.getTime() - now.getTime();
+                        setTimeout(() => this.refresh(), updateTimeout);
+                    }
+                    return this;
+                }
                 credits = fs_1.default.readFileSync(this.config.credits);
                 credits = JSON.parse(credits);
-            }
-            else {
-                credits.access_token = access_token;
-                credits.refresh_token = refresh_token;
-            }
-            this.update(credits);
-            const response = await this.validate().catch(async () => {
-                return await this.refresh().catch(e => {
+                this.update(credits);
+                await this.refresh().catch(e => {
                     throw new Error(e);
                 });
-            });
-            if (response.expire_ts) {
-                const tokenTimestamp = new Date(Number(response.expire_ts) * 1000);
-                const now = new Date(Date.now());
-                const updateTimeout = tokenTimestamp.getTime() - now.getTime();
-                setTimeout(() => this.refresh(), updateTimeout);
+                return this;
             }
-            return this;
         }
         throw new Error("Incorrect login credits");
     }
