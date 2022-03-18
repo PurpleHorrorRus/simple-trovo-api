@@ -68,37 +68,38 @@ class TrovoAPI {
             this.update({ access_token });
             return this;
         }
-        let credits = { access_token, refresh_token };
-        if (refresh_token) {
-            this.update(credits);
-            if (access_token) {
-                const response = await this.validate().catch(async () => {
-                    return await this.refresh().catch(e => {
-                        throw new Error(e);
-                    });
-                });
-                if (response.expire_ts) {
-                    const tokenTimestamp = new Date(Number(response.expire_ts) * 1000);
-                    const now = new Date(Date.now());
-                    const updateTimeout = tokenTimestamp.getTime() - now.getTime();
-                    setTimeout(() => this.refresh(), updateTimeout);
-                }
-                return this;
-            }
-            await this.refresh().catch(e => {
-                throw new Error(e);
-            });
-            return this;
+        if (!this.config.credits) {
+            throw new Error("Authorization failed: you need to specify a credits path to use Authorization Code Flow");
         }
-        if (this.config.credits) {
+        if (!access_token || !refresh_token) {
             if (!fs_1.default.existsSync(this.config.credits)) {
-                throw new Error("Invalid credits path");
+                throw new Error("Authorization failed: incorrect credits file path");
             }
             const fileContent = fs_1.default.readFileSync(this.config.credits);
-            credits = JSON.parse(fileContent);
+            const credits = JSON.parse(fileContent);
+            credits.access_token = access_token || credits.access_token;
+            credits.refresh_token = refresh_token || credits.refresh_token;
             return await this.auth(credits.access_token, credits.refresh_token);
         }
-        throw new Error("Incorrect login credits");
+        this.update({ access_token, refresh_token });
+        if (access_token) {
+            const response = await this.validate().catch(async () => {
+                return await this.refresh().catch(e => {
+                    throw e;
+                });
+            });
+            if (response.expire_ts) {
+                const tokenTimestamp = new Date(Number(response.expire_ts) * 1000);
+                const now = new Date(Date.now());
+                const updateTimeout = tokenTimestamp.getTime() - now.getTime();
+                setTimeout(() => this.refresh(), updateTimeout);
+            }
+            return this;
+        }
+        await this.refresh().catch(e => {
+            throw e;
+        });
+        return this;
     }
     async exchange(code) {
         const response = await this.requests.requestEndpoint("exchangetoken", {
