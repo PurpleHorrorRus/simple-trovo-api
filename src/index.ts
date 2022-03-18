@@ -68,6 +68,10 @@ export class TrovoAPI {
             })
         });
 
+        if (!this.refreshInterval) {
+            this.refreshInterval = setInterval(() => this.refresh(), response.expires_in * 1000);
+        }
+
         this.update(response);
         this.write(response);
 
@@ -86,12 +90,18 @@ export class TrovoAPI {
             let credits: any = fs.readFileSync(this.config.credits);
             credits = JSON.parse(credits);
             this.update(credits);
-    
-            const response = await this.refresh().catch(() => {
-                throw new Error("Refresh token are expired");
+
+            const response = await this.validate().catch(async () => { 
+                return await this.refresh().catch(e => {
+                    throw new Error(e);
+                });
             });
-    
-            this.refreshInterval = setInterval(() => this.refresh(), response.expires_in * 1000);
+
+            const tokenTimestamp = new Date(Number(response.expire_ts) * 1000);
+            const now = new Date(Date.now());
+            const updateTimeout = tokenTimestamp.getTime() - now.getTime();
+            setTimeout(() => this.refresh(), updateTimeout);
+                        
             return this;
         }
         
@@ -113,6 +123,15 @@ export class TrovoAPI {
         this.write(response);
 
         return response; 
+    }
+
+    async revoke(): TrovoRequestType { 
+        return await this.requests.requestEndpoint("revoke", {
+            method: "POST",
+            body: JSON.stringify({
+                access_token: this.accessToken
+            })
+        });
     }
 
     update(response: any): void {

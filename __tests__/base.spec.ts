@@ -28,7 +28,8 @@ beforeAll(async () => {
         credits: "credits.json"
     });
 
-    await Trovo.auth();
+    const access_token: string = process.env.ACCESS_TOKEN! || "";
+    await Trovo.auth(access_token);
     
     const { users } = await Trovo.users.get(testingUsers);
     user_id = Number(users[0].user_id);
@@ -45,13 +46,28 @@ beforeAll(async () => {
 });
 
 describe("Main", () => {
-    test("Get Auth Link", () => {
+    test.skip("Get Auth Link", () => {
         const link = Trovo.getAuthLink([], "code");
         expect(link).toBeTruthy();
+    });
+
+    test.skip("Exchange code", async () => {
+        const result = await Trovo.exchange(process.env.CODE!);
+        expect(result).toBeTruthy();
+    });
+
+    test.skip("Revoke Access Tokens", async () => {
+        const result = await Trovo.revoke();
+        expect(result).toBeTruthy();
     });
 });
 
 describe("Users", () => { 
+    test("Get My Information", async () => {
+        const me = await Trovo.users.getUserInfo();
+        expect(me).toBeTruthy();
+    });
+
     test("Get User", async () => {
         const user = await Trovo.users.getUserInfo();
         expect(user).toBeTruthy();
@@ -125,7 +141,7 @@ describe("Channel", () => {
         expect(subs).toBeTruthy();
     });
 
-    test("Get Stream M3U8 urls", async () => {
+    test("Get Stream M3U8 urls", async () => { // This request actually broken on Trovo
         const urls = await Trovo.channel.streamUrls(second_id);
         expect(urls).toBeTruthy();
     });

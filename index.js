@@ -56,6 +56,9 @@ class TrovoAPI {
                 refresh_token: this.refreshToken
             })
         });
+        if (!this.refreshInterval) {
+            this.refreshInterval = setInterval(() => this.refresh(), response.expires_in * 1000);
+        }
         this.update(response);
         this.write(response);
         return response;
@@ -72,10 +75,15 @@ class TrovoAPI {
             let credits = fs_1.default.readFileSync(this.config.credits);
             credits = JSON.parse(credits);
             this.update(credits);
-            const response = await this.refresh().catch(() => {
-                throw new Error("Refresh token are expired");
+            const response = await this.validate().catch(async () => {
+                return await this.refresh().catch(e => {
+                    throw new Error(e);
+                });
             });
-            this.refreshInterval = setInterval(() => this.refresh(), response.expires_in * 1000);
+            const tokenTimestamp = new Date(Number(response.expire_ts) * 1000);
+            const now = new Date(Date.now());
+            const updateTimeout = tokenTimestamp.getTime() - now.getTime();
+            setTimeout(() => this.refresh(), updateTimeout);
             return this;
         }
         throw new Error("Incorrect login credits");
@@ -93,6 +101,14 @@ class TrovoAPI {
         this.update(response);
         this.write(response);
         return response;
+    }
+    async revoke() {
+        return await this.requests.requestEndpoint("revoke", {
+            method: "POST",
+            body: JSON.stringify({
+                access_token: this.accessToken
+            })
+        });
     }
     update(response) {
         this.accessToken = response.access_token;
