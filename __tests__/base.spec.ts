@@ -63,11 +63,6 @@ describe("Main", () => {
 });
 
 describe("Users", () => { 
-    test("Get My Information", async () => {
-        const me = await Trovo.users.getUserInfo();
-        expect(me).toBeTruthy();
-    });
-
     test("Get User", async () => {
         const user = await Trovo.users.getUserInfo();
         expect(user).toBeTruthy();
