@@ -10,6 +10,11 @@ class ChatMessages extends EventEmitter {
     private config: ChatServiceMessagesConfig;
 
     public ChatMessageEvents: ChatMessageEventsType = {
+        5: "spells",
+        6: "super_cap",
+        7: "colorful",
+        8: "spell",
+        9: "bullet_screen",
         5001: "subscribption",
         5002: "system",
         5003: "follow",
@@ -24,6 +29,11 @@ class ChatMessages extends EventEmitter {
     };
 
     public events: ChatSpecialEventType = {
+        SPELLS: this.ChatMessageEvents[5],
+        SUPER_CAP: this.ChatMessageEvents[6],
+        COLORFUL: this.ChatMessageEvents[7],
+        SPELL: this.ChatMessageEvents[8],
+        BULLET_SCREEN: this.ChatMessageEvents[9],
         SUBSCRIPTION: this.ChatMessageEvents[5001],
         SYSTEM: this.ChatMessageEvents[5002],
         FOLLOW: this.ChatMessageEvents[5003],
