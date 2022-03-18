@@ -129,6 +129,11 @@ TrovoChat.on(TrovoChat.events.READY, () => {
         console.log(message);
     });
 
+    // Emitting only if you specified messages.fetchPastMessages to true
+    TrovoChat.messages.once("past_messages", messages => {
+        console.log(`There is ${messages.length} of old messages`);
+    });
+
     TrovoChat.messages.on(TrovoChat.messages.events.SPELLS, spell => {
         console.log(`${spell.nick_name} uses ${spell.content.gift} for ${spell.content.num} mana!`);
     });
