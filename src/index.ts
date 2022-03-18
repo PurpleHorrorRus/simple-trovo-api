@@ -84,25 +84,25 @@ export class TrovoAPI {
             return this;
         }
 
+        const credits: any = { access_token, refresh_token };
+        if (refresh_token) { 
+            this.update(credits);
+            
+            if (access_token) {
+                await this.validateWith();
+                return this;
+             }
+
+            await this.refresh().catch(e => {
+                throw new Error(e);
+            });
+
+            return this;
+        }
+        
         if (this.config.credits) {
             if (!fs.existsSync(this.config.credits)) {
                 throw new Error("Invalid credits path");
-            }
-
-            const credits: any = { access_token, refresh_token };
-            this.update(credits);
-
-            if (refresh_token) { 
-                if (access_token) {
-                    await this.validateWith();
-                    return this;
-                }
-
-                await this.refresh().catch(e => {
-                    throw new Error(e);
-                });
-
-                return this;
             }
 
             let fileContent: any = fs.readFileSync(this.config.credits);
