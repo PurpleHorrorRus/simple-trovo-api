@@ -78,17 +78,24 @@ export class TrovoAPI {
         return response;
     }
 
-    async auth(access_token: string = ""): Promise<TrovoAPI> {
-        if (access_token) {
+    async auth(access_token: string = "", refresh_token: string = ""): Promise<TrovoAPI> {
+        if (access_token && !refresh_token) {
             this.update({ access_token });
             return this;
         } else if (this.config.credits) {
             if (!fs.existsSync(this.config.credits)) {
                 throw new Error("Invalid credits path");
             }
-    
-            let credits: any = fs.readFileSync(this.config.credits);
-            credits = JSON.parse(credits);
+
+            let credits: any = {};
+            if (!access_token && !refresh_token) {
+                credits = fs.readFileSync(this.config.credits);
+                credits = JSON.parse(credits);
+            } else {
+                credits.access_token = access_token;
+                credits.refresh_token = refresh_token;
+            }
+
             this.update(credits);
 
             const response = await this.validate().catch(async () => {
