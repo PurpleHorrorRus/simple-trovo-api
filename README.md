@@ -74,7 +74,8 @@ const url = Trovo.getAuthLink(scopes, "code");
 console.log(url);
 
 /*
-After you enter your login and password on Trovo login page, you must to exchange received code to access token and refresh token.
+After you enter your login and password on Trovo login page, 
+you must to exchange received code to access token and refresh token.
 */
 
 await Trovo.exchange(code);
@@ -126,6 +127,10 @@ TrovoChat.on(TrovoChat.events.READY, () => {
         console.log(message);
     });
 
+    TrovoChat.messages.on(TrovoChat.messages.events.SPELLS, spell => {
+        console.log(`${spell.nick_name} uses ${spell.content.gift} for ${spell.content.num} mana!`);
+    });
+
     // Listen special message events
     TrovoChat.messages.on(TrovoChat.messages.events.FOLLOW, follow => {
         console.log(`Thank you for following, ${follow.nick_name}!`);
@@ -140,7 +145,5 @@ TrovoChat.on(TrovoChat.events.DISCONNECTED, reason => {
 Chat service has an listeners for special events in chat. There is a list of events.
 
 ```
-subscription, system, follow, welcome, gift_sub_random, gift_sub, activity, raid, custom_spell, stream, unfollow
+spells, super_cap, colorful, spell, bullet_screen, subscription, system, follow, welcome, gift_sub_random, gift_sub, activity, raid, custom_spell, stream, unfollow
 ```
-
-All messages of magic chat mark as default messages and not included to the special events.
