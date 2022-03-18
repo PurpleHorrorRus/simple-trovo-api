@@ -89,35 +89,14 @@ export class TrovoAPI {
                 throw new Error("Invalid credits path");
             }
 
+            const credits: any = { access_token, refresh_token };
+            this.update(credits);
+
             if (refresh_token) { 
-                let credits: any = {
-                    access_token: "",
-                    refresh_token
-                };
-
                 if (access_token) {
-                    credits.access_token = access_token;
-                    this.update(credits);
-
-                    const response = await this.validate().catch(async () => {
-                        return await this.refresh().catch(e => {
-                            throw new Error(e);
-                        });
-                    });
-
-                    if (response.expire_ts) {
-                        const tokenTimestamp = new Date(Number(response.expire_ts) * 1000);
-                        const now = new Date(Date.now());
-                        const updateTimeout = tokenTimestamp.getTime() - now.getTime();
-                        setTimeout(() => this.refresh(), updateTimeout);
-                    }
-
+                    await this.validateWith();
                     return this;
                 }
-
-                credits = fs.readFileSync(this.config.credits);
-                credits = JSON.parse(credits);
-                this.update(credits);
 
                 await this.refresh().catch(e => {
                     throw new Error(e);
@@ -125,9 +104,35 @@ export class TrovoAPI {
 
                 return this;
             }
+
+            let fileContent: any = fs.readFileSync(this.config.credits);
+            fileContent = JSON.parse(fileContent);
+            credits.refresh_token = fileContent.refresh_token;
+            this.update(credits);
+
+            await this.validateWith();
+
+            return this;
         }
         
         throw new Error("Incorrect login credits");
+    }
+
+    async validateWith(): TrovoRequestType { 
+        const response = await this.validate().catch(async () => {
+            return await this.refresh().catch(e => {
+                throw new Error(e);
+            });
+        });
+
+        if (response.expire_ts) {
+            const tokenTimestamp = new Date(Number(response.expire_ts) * 1000);
+            const now = new Date(Date.now());
+            const updateTimeout = tokenTimestamp.getTime() - now.getTime();
+            setTimeout(() => this.refresh(), updateTimeout);
+        }
+
+        return response;
     }
 
     async exchange(code: string): TrovoRequestType { 

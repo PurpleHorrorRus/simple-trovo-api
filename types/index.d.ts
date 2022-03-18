@@ -25,6 +25,7 @@ export declare class TrovoAPI {
     validate(): TrovoRequestType;
     refresh(): TrovoRequestType;
     auth(access_token?: string, refresh_token?: string): Promise<TrovoAPI>;
+    validateWith(): TrovoRequestType;
     exchange(code: string): TrovoRequestType;
     revoke(): TrovoRequestType;
     update(response: any): void;
