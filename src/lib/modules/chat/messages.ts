@@ -49,7 +49,7 @@ class ChatMessages extends EventEmitter {
         }
 
         if (this.config.fetchPastMessages && this.lastMessageTime === 0) {
-            return this.emitChatMessages(response.data.chats);
+            return this.emit("past_messages", response.data.chats);
         }
 
         const newMessages: ChatMessage[] = this.getNewMessages(response.data.chats);
