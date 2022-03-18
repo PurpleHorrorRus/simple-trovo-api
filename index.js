@@ -68,7 +68,7 @@ class TrovoAPI {
             this.update({ access_token });
             return this;
         }
-        const credits = { access_token, refresh_token };
+        let credits = { access_token, refresh_token };
         if (refresh_token) {
             this.update(credits);
             if (access_token) {
@@ -84,9 +84,8 @@ class TrovoAPI {
             if (!fs_1.default.existsSync(this.config.credits)) {
                 throw new Error("Invalid credits path");
             }
-            let fileContent = fs_1.default.readFileSync(this.config.credits);
-            fileContent = JSON.parse(fileContent);
-            credits.refresh_token = fileContent.refresh_token;
+            const fileContent = fs_1.default.readFileSync(this.config.credits);
+            credits = JSON.parse(fileContent);
             this.update(credits);
             await this.validateWithRefreshing();
             return this;

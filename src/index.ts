@@ -84,7 +84,7 @@ export class TrovoAPI {
             return this;
         }
 
-        const credits: any = { access_token, refresh_token };
+        let credits: any = { access_token, refresh_token };
         if (refresh_token) { 
             this.update(credits);
             
@@ -105,9 +105,8 @@ export class TrovoAPI {
                 throw new Error("Invalid credits path");
             }
 
-            let fileContent: any = fs.readFileSync(this.config.credits);
-            fileContent = JSON.parse(fileContent);
-            credits.refresh_token = fileContent.refresh_token;
+            const fileContent: any = fs.readFileSync(this.config.credits);
+            credits = JSON.parse(fileContent);
             this.update(credits);
 
             await this.validateWithRefreshing();

@@ -66,7 +66,8 @@ const { TrovoAPI } = require("simple-trovo-api");
 const Trovo = new TrovoAPI({
     client_id: "xxxxxxxxx",
     client_secret: "xxxxxxxx",
-    redirect_uri: "http://localhost:1337/"
+    redirect_uri: "http://localhost:1337/",
+    credits: "credits.json"
 });
 
 const scopes = [];
@@ -93,7 +94,8 @@ const { TrovoAPI } = require("simple-trovo-api");
     const Trovo = new TrovoAPI({
         client_id: "xxxxxxxxx",
         client_secret: "xxxxxxxx",
-        redirect_uri: "http://localhost:1337/"
+        redirect_uri: "http://localhost:1337/",
+        credits: "credits.json"
     });
 
     await Trovo.auth();
