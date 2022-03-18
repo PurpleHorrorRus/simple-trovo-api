@@ -89,9 +89,21 @@ export class TrovoAPI {
             this.update(credits);
             
             if (access_token) {
-                await this.validateWithRefreshing();
+                const response = await this.validate().catch(async () => {
+                    return await this.refresh().catch(e => {
+                        throw new Error(e);
+                    });
+                });
+        
+                if (response.expire_ts) {
+                    const tokenTimestamp = new Date(Number(response.expire_ts) * 1000);
+                    const now = new Date(Date.now());
+                    const updateTimeout = tokenTimestamp.getTime() - now.getTime();
+                    setTimeout(() => this.refresh(), updateTimeout);
+                }
+        
                 return this;
-             }
+            }
 
             await this.refresh().catch(e => {
                 throw new Error(e);
@@ -107,31 +119,10 @@ export class TrovoAPI {
 
             const fileContent: any = fs.readFileSync(this.config.credits);
             credits = JSON.parse(fileContent);
-            this.update(credits);
-
-            await this.validateWithRefreshing();
-
-            return this;
+            return await this.auth(credits.access_token, credits.refresh_token);
         }
         
         throw new Error("Incorrect login credits");
-    }
-
-    async validateWithRefreshing(): TrovoRequestType { 
-        const response = await this.validate().catch(async () => {
-            return await this.refresh().catch(e => {
-                throw new Error(e);
-            });
-        });
-
-        if (response.expire_ts) {
-            const tokenTimestamp = new Date(Number(response.expire_ts) * 1000);
-            const now = new Date(Date.now());
-            const updateTimeout = tokenTimestamp.getTime() - now.getTime();
-            setTimeout(() => this.refresh(), updateTimeout);
-        }
-
-        return response;
     }
 
     async exchange(code: string): TrovoRequestType { 
