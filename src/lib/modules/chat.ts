@@ -44,7 +44,7 @@ class Chat extends TrovoRequests {
         });
     }
     
-    async token(): TrovoRequestType {
+    async token(): Promise<string> {
         const response: any = await this.requestEndpoint("chat/token");
         return response.token;
     }

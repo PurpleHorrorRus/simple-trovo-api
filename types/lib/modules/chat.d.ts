@@ -20,7 +20,7 @@ declare class Chat extends TrovoRequests {
     };
     constructor(headers: Headers);
     connect(chatServiceConfig?: ChatServiceConfig): Promise<ChatService>;
-    token(): TrovoRequestType;
+    token(): Promise<string>;
     channelToken(channelID: number): Promise<string>;
     send(content: string, channel_id?: number | string): TrovoRequestType;
     delete(channelID: number | string, messageID: string, uID: number | string): Promise<any>;
