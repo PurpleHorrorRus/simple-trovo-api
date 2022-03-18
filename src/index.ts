@@ -91,16 +91,18 @@ export class TrovoAPI {
             credits = JSON.parse(credits);
             this.update(credits);
 
-            const response = await this.validate().catch(async () => { 
+            const response = await this.validate().catch(async () => {
                 return await this.refresh().catch(e => {
                     throw new Error(e);
                 });
             });
 
-            const tokenTimestamp = new Date(Number(response.expire_ts) * 1000);
-            const now = new Date(Date.now());
-            const updateTimeout = tokenTimestamp.getTime() - now.getTime();
-            setTimeout(() => this.refresh(), updateTimeout);
+            if (response.expire_ts) {
+                const tokenTimestamp = new Date(Number(response.expire_ts) * 1000);
+                const now = new Date(Date.now());
+                const updateTimeout = tokenTimestamp.getTime() - now.getTime();
+                setTimeout(() => this.refresh(), updateTimeout);
+            }
                         
             return this;
         }

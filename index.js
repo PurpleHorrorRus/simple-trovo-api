@@ -80,10 +80,12 @@ class TrovoAPI {
                     throw new Error(e);
                 });
             });
-            const tokenTimestamp = new Date(Number(response.expire_ts) * 1000);
-            const now = new Date(Date.now());
-            const updateTimeout = tokenTimestamp.getTime() - now.getTime();
-            setTimeout(() => this.refresh(), updateTimeout);
+            if (response.expire_ts) {
+                const tokenTimestamp = new Date(Number(response.expire_ts) * 1000);
+                const now = new Date(Date.now());
+                const updateTimeout = tokenTimestamp.getTime() - now.getTime();
+                setTimeout(() => this.refresh(), updateTimeout);
+            }
             return this;
         }
         throw new Error("Incorrect login credits");
