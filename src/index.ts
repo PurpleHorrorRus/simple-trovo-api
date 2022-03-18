@@ -88,7 +88,7 @@ export class TrovoAPI {
             throw new Error("Authorization failed: you need to specify a credits path to use Authorization Code Flow");
         }
 
-        if (!access_token || !refresh_token) {
+        if (!refresh_token) {
             if (!fs.existsSync(this.config.credits)) {
                 throw new Error("Authorization failed: incorrect credits file path");
             }
@@ -96,7 +96,6 @@ export class TrovoAPI {
             const fileContent: any = fs.readFileSync(this.config.credits);
             const credits = JSON.parse(fileContent);
             credits.access_token = access_token || credits.access_token;
-            credits.refresh_token = refresh_token || credits.refresh_token;
             return await this.auth(credits.access_token, credits.refresh_token);
         }
 
