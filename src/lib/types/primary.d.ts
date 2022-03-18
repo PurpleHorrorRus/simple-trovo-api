@@ -1,1 +1,1 @@
-export type TrovoRequestType = Promise<any>
+export type TrovoRequestType = Promise<any>;

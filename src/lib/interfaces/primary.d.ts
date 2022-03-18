@@ -2,7 +2,9 @@ import { ChatServiceConfig } from "./chat"
 
 export interface TrovoConfig {
     client_id: string
-    access_token?: string,
+    client_secret: string
+    redirect_uri: string
+    credits?: string
     chatServiceConfig?: ChatServiceConfig
 }
 

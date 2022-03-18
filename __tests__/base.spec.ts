@@ -3,6 +3,7 @@ import "dotenv/config";
 import { TrovoAPI } from "../src/index";
 import ChatService from "../src/lib/modules/chat/service";
 import { ChatMessage, ChatServiceConfig } from "../src/lib/interfaces/chat";
+import ChatMessages from "../src/lib/modules/chat/messages";
 
 jest.setTimeout(60 * 1000 * 2);
 
@@ -13,7 +14,7 @@ let second_id: number;
 
 const chatConfig: ChatServiceConfig = {
     messages: {
-        fetchPastMessages: false
+        fetchPastMessages: true
     }
 };
 
@@ -22,9 +23,13 @@ const testingUsers = ["InfiniteHorror", "Wara"];
 beforeAll(async () => {
     Trovo = new TrovoAPI({
         client_id: process.env.CLIENT_ID!,
-        access_token: process.env.ACCESS_TOKEN!
+        client_secret: process.env.CLIENT_SECRET!,
+        redirect_uri: "https://purplehorrorrus.github.io/token",
+        credits: "credits.json"
     });
 
+    await Trovo.auth();
+    
     const { users } = await Trovo.users.get(testingUsers);
     user_id = Number(users[0].user_id);
     second_id = Number(users[1].user_id);
@@ -41,7 +46,7 @@ beforeAll(async () => {
 
 describe("Main", () => {
     test("Get Auth Link", () => {
-        const link = Trovo.getAuthLink([], "https://purplehorrorrus.github.io/token");
+        const link = Trovo.getAuthLink([], "code");
         expect(link).toBeTruthy();
     });
 });
@@ -156,6 +161,14 @@ describe("Chat", () => {
     test.skip("Send Message", async () => {
         const message = await Trovo.chat.send("Sended from simple-trovo-api");
         expect(message).toBeTruthy();
+    });
+
+    test.skip("Get Past Messages", async () => { 
+        const messages: ChatMessages[] = await new Promise(resolve => {
+            TrovoChat.messages.once("past_messages", resolve);
+        });
+
+        expect(Array.isArray(messages)).toBe(true);
     });
 
     test.skip("Stay alive", async () => {

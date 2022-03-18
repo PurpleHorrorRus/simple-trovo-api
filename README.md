@@ -11,43 +11,97 @@ List of available modules:
 categories, channel, channels, chat, chat.service, users
 ```
 
+## Implict Flow
+
+
 ### Fetch personal access token
 
 If you already have access token, you can skip this step.
 
-You must to fetch your personal token with generated with specified scopes and specified redirect url in page with your application.
+You must to fetch your personal token with generated with specified scopes and specified redirect url in page with your application. OAuth Implict Flow stores your access token only 10 days.
 
 ```javascript
 const { TrovoAPI } = require("simple-trovo-api");
 
 const Trovo = new TrovoAPI({
-    client_id: "xxxxxxxxx"
+    client_id: "xxxxxxxxx",
+    client_secret: "xxxxxxxx",
+    redirect_uri: "http://localhost:1337/"
 });
 
-const scopes = []; // Leave it empty to grant access with all available scopes
-const url = Trovo.getAuthLink(scopes, "https://purplehorrorrus.github.io/token");
+const scopes = [];
+const url = Trovo.getAuthLink(scopes, "token");
 console.log(url);
 ```
 
-### Create new instance with access token
+### Create new instance with Implict Flow
 
-Now you can use this package at full power. Here is example (fetch information about yourself):
+Now you can use this package at full power. Here is example of usage (fetch information about yourself):
 
 ```javascript
 const { TrovoAPI } = require("simple-trovo-api");
 
 (async () => {
     const Trovo = new TrovoAPI({
-        access_token: "xxxxxxxxx",
-        client_id: "xxxxxxxxx"
+        client_id: "xxxxxxxxx",
+        client_secret: "xxxxxxxx",
+        redirect_uri: "http://localhost:1337/"
     });
 
+    await Trovo.auth(access_token);
     const user = await Trovo.users.getUserInfo();
     console.log(user);
 })();
 ```
 
-### Chat connection
+## Code Flow
+
+OAuth code flow works a little harder, but you don't need to manually update your tokens in future. Access token and refresh token will be refresh automatically until refresh token is valid. One refresh token storing for only 30 days.
+
+### Authorization
+
+```javascript
+const { TrovoAPI } = require("simple-trovo-api");
+
+const Trovo = new TrovoAPI({
+    client_id: "xxxxxxxxx",
+    client_secret: "xxxxxxxx",
+    redirect_uri: "http://localhost:1337/"
+});
+
+const scopes = [];
+const url = Trovo.getAuthLink(scopes, "code");
+console.log(url);
+
+/*
+After you enter your login and password on Trovo login page, you must to exchange received code to access token and refresh token.
+*/
+
+await Trovo.exchange(code);
+```
+
+
+### Create new instance with Code Flow
+
+There is same example.
+
+```javascript
+const { TrovoAPI } = require("simple-trovo-api");
+
+(async () => {
+    const Trovo = new TrovoAPI({
+        client_id: "xxxxxxxxx",
+        client_secret: "xxxxxxxx",
+        redirect_uri: "http://localhost:1337/"
+    });
+
+    await Trovo.auth();
+    const user = await Trovo.users.getUserInfo();
+    console.log(user);
+})();
+```
+
+## Chat
 
 Trovo uses simple WebSocket connection to receive messages from your chat and simple-trovo-api realize some events to interact with. Before using chat service you must to refresh chat token on every connecting or reconnecting.
 
