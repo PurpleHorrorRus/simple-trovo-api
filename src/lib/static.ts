@@ -1,6 +1,6 @@
 class Static {
-    handleError(error: string): Error {
-        throw new Error(error);
+    handleError(error: any): Error {
+        throw new Error(error.message || error);
     }
 
     static generateQuery(params: any): string {
