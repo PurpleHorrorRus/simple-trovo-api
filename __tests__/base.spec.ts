@@ -5,7 +5,7 @@ import ChatService from "../src/lib/modules/chat/service";
 import { ChatMessage, ChatServiceConfig } from "../src/lib/interfaces/chat";
 import ChatMessages from "../src/lib/modules/chat/messages";
 
-jest.setTimeout(60 * 1000 * 2);
+jest.setTimeout(30 * 1000);
 
 let Trovo: TrovoAPI;
 let TrovoChat: ChatService;
@@ -14,7 +14,7 @@ let second_id: number;
 
 const chatConfig: ChatServiceConfig = {
     messages: {
-        fetchPastMessages: true
+        fetchPastMessages: false
     }
 };
 
@@ -35,15 +35,6 @@ beforeAll(async () => {
     const { users } = await Trovo.users.get(testingUsers);
     user_id = Number(users[0].user_id);
     second_id = Number(users[1].user_id);
-
-    TrovoChat = await Trovo.chat.connect(chatConfig);
-    TrovoChat.on(TrovoChat.events.READY, () => {
-        console.log("Chat has been connected");
-    });
-    
-    TrovoChat.on(TrovoChat.events.DISCONNECTED, event => { 
-        console.log("Chat has been disconnected", event);
-    });
 });
 
 describe("Main", () => {
@@ -154,33 +145,42 @@ describe("Channel", () => {
 });
 
 describe("Chat", () => {
-    test.skip("Receive message", async () => {
-        const message: ChatMessage = await new Promise(resolve => {
-            TrovoChat.messages.on("message", resolve);
-
-            if (!chatConfig.messages?.fetchPastMessages) {
-                Trovo.chat.send("Sended from simple-trovo-api");
-            }
+    beforeAll(async () => {
+        TrovoChat = await Trovo.chat.connect(chatConfig);
+        TrovoChat.on(TrovoChat.events.READY, () => {
+            console.log("Chat has been connected");
         });
+        
+        TrovoChat.on(TrovoChat.events.DISCONNECTED, event => {
+            console.log("Chat has been disconnected", event);
+        });
+    });
 
-        if (!chatConfig.messages?.fetchPastMessages) {
-            Trovo.chat.delete(user_id, message.message_id, message.uid);
+    test("Get Past Messages", async () => { 
+        if (!chatConfig?.messages?.fetchPastMessages) {
+            return expect(true).toBe(true);
         }
 
+        const messages: ChatMessages[] = await new Promise(resolve => {
+            TrovoChat.messages.once("past_messages", resolve);
+        });
+
+        expect(Array.isArray(messages)).toBe(true);
+    });
+
+    test.skip("Receive message", async () => {
+        const message: ChatMessage = await new Promise(resolve => {
+            TrovoChat.messages.once("message", resolve);
+            Trovo.chat.send("Sended from simple-trovo-api");
+        });
+
+        Trovo.chat.delete(user_id, message.message_id, message.uid);
         expect(message).toBeTruthy();
     });
 
     test.skip("Send Message", async () => {
         const message = await Trovo.chat.send("Sended from simple-trovo-api");
         expect(message).toBeTruthy();
-    });
-
-    test.skip("Get Past Messages", async () => { 
-        const messages: ChatMessages[] = await new Promise(resolve => {
-            TrovoChat.messages.once("past_messages", resolve);
-        });
-
-        expect(Array.isArray(messages)).toBe(true);
     });
 
     test.skip("Stay alive", async () => {
