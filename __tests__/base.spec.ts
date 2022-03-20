@@ -32,7 +32,7 @@ beforeAll(async () => {
     let access_token: string = process.env.ACCESS_TOKEN! || "";
     let refresh_token: string = process.env.REFRESH_TOKEN! || "";
 
-    if (!process.env.CI) {
+    if (!process.env.CI_TEST) {
         const fileContent: any = fs.readFileSync("./credits.json");
         const credits: any = JSON.parse(fileContent);
         access_token = credits.access_token;
@@ -46,7 +46,7 @@ beforeAll(async () => {
     second_id = Number(users[1].user_id);
 });
 
-describe.skip("Main", () => {
+describe("Main", () => {
     test("Get Auth Link", () => {
         const link = Trovo.getAuthLink([], "code");
         expect(link).toBeTruthy();
