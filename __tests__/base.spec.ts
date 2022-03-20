@@ -1,4 +1,5 @@
 import "dotenv/config";
+import fs from "fs";
 
 import { TrovoAPI } from "../src/index";
 import ChatService from "../src/lib/modules/chat/service";
@@ -28,17 +29,25 @@ beforeAll(async () => {
         credits: "credits.json"
     });
 
-    const access_token: string = process.env.ACCESS_TOKEN! || "";
-    const refresh_token: string = process.env.REFRESH_TOKEN! || "";
-    await Trovo.auth(access_token, refresh_token);
+    let access_token: string = process.env.ACCESS_TOKEN! || "";
+    let refresh_token: string = process.env.REFRESH_TOKEN! || "";
+
+    if (!process.env.CI) {
+        const fileContent: any = fs.readFileSync("./credits.json");
+        const credits: any = JSON.parse(fileContent);
+        access_token = credits.access_token;
+        refresh_token = credits.refresh_token;
+    }
+
+    Trovo = await Trovo.auth(access_token, refresh_token);
     
     const { users } = await Trovo.users.get(testingUsers);
     user_id = Number(users[0].user_id);
     second_id = Number(users[1].user_id);
 });
 
-describe("Main", () => {
-    test.skip("Get Auth Link", () => {
+describe.skip("Main", () => {
+    test("Get Auth Link", () => {
         const link = Trovo.getAuthLink([], "code");
         expect(link).toBeTruthy();
     });
