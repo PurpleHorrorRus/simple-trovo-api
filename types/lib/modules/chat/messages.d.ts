@@ -10,8 +10,10 @@ declare class ChatMessages extends EventEmitter {
     events: ChatSpecialEventType;
     constructor(chatServiceMessagesConfig?: ChatServiceMessagesConfig);
     handle(response: any): boolean;
+    formatMessage(message: ChatMessage): ChatMessage;
     emitChatMessages(messages: ChatMessage[]): boolean;
     getNewMessages(messages: ChatMessage[]): ChatMessage[];
+    updateLastMessageTime(messages: ChatMessage[]): number;
     updateTime(time?: number): number;
     fixAvatar(file: string | undefined): string;
 }

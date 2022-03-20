@@ -59,24 +59,37 @@ class ChatMessages extends EventEmitter {
         }
 
         if (this.config.fetchPastMessages && this.lastMessageTime === 0) {
-            return this.emit("past_messages", response.data.chats);
+            const messages: ChatMessage[] = response.data.chats;
+
+            messages.forEach((message: ChatMessage) => {
+                message = this.formatMessage(message);
+                return message;
+            });
+
+            this.updateLastMessageTime(messages);
+
+            return this.emit("past_messages", messages);
         }
 
         const newMessages: ChatMessage[] = this.getNewMessages(response.data.chats);
         return this.emitChatMessages(newMessages);
     }
 
+    formatMessage(message: ChatMessage): ChatMessage { 
+        message.avatar = this.fixAvatar(message.avatar);
+        return message;
+    }
+
     emitChatMessages(messages: ChatMessage[]): boolean {
         if (messages.length > 0) {
             messages.forEach((message: ChatMessage) => {
-                message.avatar = this.fixAvatar(message.avatar);
+                message = this.formatMessage(message);
                 const event: string = this.ChatMessageEvents[message.type] || "message";
                 return this.emit(event, message);
             });
         }
         
-        const time: number = messages[messages.length - 1]?.send_time;
-        this.updateTime(time);
+        this.updateLastMessageTime(messages);
 
         return messages.length > 0;
     }
@@ -87,6 +100,11 @@ class ChatMessages extends EventEmitter {
         });
         
         return newMessages;
+    }
+
+    updateLastMessageTime(messages: ChatMessage[]): number { 
+        const time: number = messages[messages.length - 1]?.send_time;
+        return this.updateTime(time);
     }
 
     updateTime(time: number = Math.floor(Date.now() / 1000)): number {
