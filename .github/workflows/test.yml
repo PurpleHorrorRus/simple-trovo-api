@@ -22,7 +22,7 @@ jobs:
         run: yarn
 
       - name: Run tests
-        run: yarn test --forceExit
+        run: yarn test:ci --forceExit
         env:
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}

@@ -26,7 +26,8 @@
         "lint": "eslint . --ext .ts",
         "clean": "rimraf lib/ && rimraf types/",
         "build": "yarn clean && tsc",
-        "test": "jest"
+        "test": "jest",
+        "test:ci": "cross-env NODE_ENV=CI && jest"
     },
     "devDependencies": {
         "@types/jest": "^27.4.1",
@@ -35,6 +36,7 @@
         "@types/ws": "^8.5.2",
         "@typescript-eslint/eslint-plugin": "^5.14.0",
         "@typescript-eslint/parser": "^5.14.0",
+        "cross-env": "^7.0.3",
         "dotenv": "^16.0.0",
         "eslint": "^8.10.0",
         "jest": "^27.5.1",
