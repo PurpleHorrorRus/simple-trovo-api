@@ -54,12 +54,8 @@ class ChatMessages extends EventEmitter {
     }
 
     handle(response: any): boolean {
-        if (!response.data.chats) {
-            return this.emitChatMessages([]);
-        }
-
         if (this.config.fetchPastMessages && this.lastMessageTime === 0) {
-            const messages: ChatMessage[] = response.data.chats;
+            const messages: ChatMessage[] = response.data.chats || [];
 
             messages.forEach((message: ChatMessage) => {
                 message = this.formatMessage(message);
@@ -103,6 +99,10 @@ class ChatMessages extends EventEmitter {
     }
 
     updateLastMessageTime(messages: ChatMessage[]): number { 
+        if (messages.length === 0) {
+            return this.updateTime();
+        }
+        
         const time: number = messages[messages.length - 1]?.send_time;
         return this.updateTime(time);
     }
