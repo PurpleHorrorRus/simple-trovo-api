@@ -135,11 +135,6 @@ class ChatService extends EventEmitter {
     }
 
     onAuth(): boolean { 
-        // Watch only new messages
-        if (!this.config.messages?.fetchPastMessages) {
-            this.messages.updateTime();
-        }
-        
         this.heartbeat = setInterval(() => {
             this.send(this.requests.PING, this.nonces.PING);
             this.emit(this.events.HEARTBEAT);

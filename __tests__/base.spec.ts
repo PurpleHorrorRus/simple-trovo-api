@@ -187,6 +187,20 @@ describe("Chat", () => {
         expect(message).toBeTruthy();
     });
 
+    test.skip("Receive messages sended at the same time", async () => {
+        const messages: ChatMessage[] = [];
+        
+        await new Promise(resolve => {
+            TrovoChat.messages.on("message", message => {
+                messages.push(message);
+                if (messages.length === 2) return resolve(messages);
+            });
+        });
+
+        expect(messages.length).toBe(2);
+        expect(messages[0].send_time).toBe(messages[1].send_time);
+    });
+
     test.skip("Send Message", async () => {
         const message = await Trovo.chat.send("Sended from simple-trovo-api");
         expect(message).toBeTruthy();

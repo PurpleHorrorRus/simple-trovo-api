@@ -5,8 +5,6 @@ import { ChatMessageEventsType, ChatSpecialEventType } from "../../types/chat";
 
 class ChatMessages extends EventEmitter { 
     private avatarEndpoint: string = "https://headicon.trovo.live";
-    private lastMessageTime: number = 0;
-
     private config: ChatServiceMessagesConfig;
 
     public ChatMessageEvents: ChatMessageEventsType = {
@@ -47,6 +45,8 @@ class ChatMessages extends EventEmitter {
         UNFOLLOW: this.ChatMessageEvents[5013],
     };
 
+    private lastMessagesFetched: boolean = false;
+
     constructor(chatServiceMessagesConfig: ChatServiceMessagesConfig = {}) {
         super();
 
@@ -54,21 +54,12 @@ class ChatMessages extends EventEmitter {
     }
 
     handle(response: any): boolean {
-        if (this.config.fetchPastMessages && this.lastMessageTime === 0) {
-            const messages: ChatMessage[] = response.data.chats || [];
-
-            messages.forEach((message: ChatMessage) => {
-                message = this.formatMessage(message);
-                return message;
-            });
-
-            this.updateLastMessageTime(messages);
-
-            return this.emit("past_messages", messages);
+        if (this.config.fetchPastMessages && !this.lastMessagesFetched) {
+            return this.emitPastMessages(response);
         }
 
-        const newMessages: ChatMessage[] = this.getNewMessages(response.data.chats);
-        return this.emitChatMessages(newMessages);
+        const lastMessage: ChatMessage = response.data.chats[response.data.chats.length - 1];
+        return this.emitChatMessage(lastMessage);
     }
 
     formatMessage(message: ChatMessage): ChatMessage { 
@@ -76,40 +67,31 @@ class ChatMessages extends EventEmitter {
         return message;
     }
 
-    emitChatMessages(messages: ChatMessage[]): boolean {
+    emitChatMessage(message: ChatMessage): boolean {
+        message = this.formatMessage(message);
+        const event: string = this.ChatMessageEvents[message.type] || "message";
+        return this.emit(event, message);
+    }
+
+    emitPastMessages(response: any): boolean { 
+        this.lastMessagesFetched = true;
+
+        let messages: ChatMessage[] = response.data.chats || [];
         if (messages.length > 0) {
-            messages.forEach((message: ChatMessage) => {
-                message = this.formatMessage(message);
-                const event: string = this.ChatMessageEvents[message.type] || "message";
-                return this.emit(event, message);
+            const currentTime = Math.floor(Date.now() / 1000);
+
+            messages = messages.filter(message => { 
+                return message.send_time < currentTime;
             });
+            
+            messages = messages.map(message => {
+                return this.formatMessage(message);
+            });
+
+            return this.emit("past_messages", messages);
         }
-        
-        this.updateLastMessageTime(messages);
 
-        return messages.length > 0;
-    }
-
-    getNewMessages(messages: ChatMessage[]): ChatMessage[] { 
-        const newMessages: ChatMessage[] = messages.filter((message: ChatMessage) => {
-            return message.send_time > this.lastMessageTime;
-        });
-        
-        return newMessages;
-    }
-
-    updateLastMessageTime(messages: ChatMessage[]): number { 
-        if (messages.length === 0) {
-            return this.updateTime();
-        }
-        
-        const time: number = messages[messages.length - 1]?.send_time;
-        return this.updateTime(time);
-    }
-
-    updateTime(time: number = Math.floor(Date.now() / 1000)): number {
-        this.lastMessageTime = time;
-        return this.lastMessageTime;
+        return false;
     }
 
     fixAvatar(file: string | undefined): string {

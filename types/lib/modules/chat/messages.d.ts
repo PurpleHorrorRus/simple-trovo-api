@@ -4,17 +4,15 @@ import { ChatMessage, ChatServiceMessagesConfig } from "../../interfaces/chat";
 import { ChatMessageEventsType, ChatSpecialEventType } from "../../types/chat";
 declare class ChatMessages extends EventEmitter {
     private avatarEndpoint;
-    private lastMessageTime;
     private config;
     ChatMessageEvents: ChatMessageEventsType;
     events: ChatSpecialEventType;
+    private lastMessagesFetched;
     constructor(chatServiceMessagesConfig?: ChatServiceMessagesConfig);
     handle(response: any): boolean;
     formatMessage(message: ChatMessage): ChatMessage;
-    emitChatMessages(messages: ChatMessage[]): boolean;
-    getNewMessages(messages: ChatMessage[]): ChatMessage[];
-    updateLastMessageTime(messages: ChatMessage[]): number;
-    updateTime(time?: number): number;
+    emitChatMessage(message: ChatMessage): boolean;
+    emitPastMessages(response: any): boolean;
     fixAvatar(file: string | undefined): string;
 }
 export default ChatMessages;
