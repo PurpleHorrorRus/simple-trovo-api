@@ -177,7 +177,7 @@ describe("Chat", () => {
         expect(Array.isArray(messages)).toBe(true);
     });
 
-    test.skip("Receive message", async () => {
+    test("Receive message", async () => {
         const message: ChatMessage = await new Promise(resolve => {
             TrovoChat.messages.once("message", resolve);
             Trovo.chat.send("Sended from simple-trovo-api");
