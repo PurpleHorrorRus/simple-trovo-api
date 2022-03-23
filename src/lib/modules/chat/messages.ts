@@ -45,6 +45,7 @@ class ChatMessages extends EventEmitter {
         UNFOLLOW: this.ChatMessageEvents[5013],
     };
 
+    private time: number = Math.floor(Date.now() / 1000);
     private lastMessagesFetched: boolean = false;
 
     constructor(chatServiceMessagesConfig: ChatServiceMessagesConfig = {}) {
@@ -58,8 +59,24 @@ class ChatMessages extends EventEmitter {
             return this.emitPastMessages(response);
         }
 
-        const lastMessage: ChatMessage = response.data.chats[response.data.chats.length - 1];
-        return this.emitChatMessage(lastMessage);
+        const messages: ChatMessage[] = this.getNewMessages(response.data.chats);
+        
+        if (messages.length > 0) {
+            messages.forEach((message: ChatMessage) => {
+                this.time = message.send_time;
+                return this.emitChatMessage(message);
+            });
+            
+            return true;
+        }
+
+        return false;
+    }
+
+    getNewMessages(messages: ChatMessage[]): ChatMessage[] {
+        return messages.filter((message: ChatMessage) => {
+            return message.send_time >= this.time;
+        });
     }
 
     formatMessage(message: ChatMessage): ChatMessage { 

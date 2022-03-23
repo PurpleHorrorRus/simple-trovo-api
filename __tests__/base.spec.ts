@@ -212,6 +212,8 @@ describe("Chat", () => {
                 console.log(`${message.nick_name}: ${message.content}`);
             });
         });
+
+        expect(true).toBe(true);
     });
 
     test.skip("Delete Message", async () => {

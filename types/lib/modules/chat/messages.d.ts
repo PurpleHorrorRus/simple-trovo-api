@@ -7,9 +7,11 @@ declare class ChatMessages extends EventEmitter {
     private config;
     ChatMessageEvents: ChatMessageEventsType;
     events: ChatSpecialEventType;
+    private time;
     private lastMessagesFetched;
     constructor(chatServiceMessagesConfig?: ChatServiceMessagesConfig);
     handle(response: any): boolean;
+    getNewMessages(messages: ChatMessage[]): ChatMessage[];
     formatMessage(message: ChatMessage): ChatMessage;
     emitChatMessage(message: ChatMessage): boolean;
     emitPastMessages(response: any): boolean;
