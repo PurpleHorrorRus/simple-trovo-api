@@ -11,3 +11,4 @@ src
 jest.config.js
 tsconfig.json
 credits.json
+ci.js
