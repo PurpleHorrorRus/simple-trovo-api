@@ -142,6 +142,7 @@ TrovoChat.on(TrovoChat.events.READY, () => {
     TrovoChat.messages.on(TrovoChat.messages.events.SPELLS, message => {
         const user = message.nick_name;
         const spell = message.content.gift;
+        const count = message.content.num;
         const cost = message.content.gift_value;
         const value = message.content.value_type;
 
