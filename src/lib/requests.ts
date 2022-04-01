@@ -20,9 +20,8 @@ class TrovoRequests extends Static {
             ...params
         });
 
-        return response.status === 200
-            ? await response.json()
-            : this.handleError(await response.json());
+        const json = await response.json();
+        return response.ok ? json : this.handleError(json);
     }
 
     public async requestEndpoint(endpoint: string, params: RequestInit = {}): TrovoRequestType {

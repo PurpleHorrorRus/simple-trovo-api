@@ -8,13 +8,13 @@ declare class ChatMessages extends EventEmitter {
     ChatMessageEvents: ChatMessageEventsType;
     events: ChatSpecialEventType;
     private time;
-    private lastMessagesFetched;
+    private pastMessagesFetched;
     constructor(chatServiceMessagesConfig?: ChatServiceMessagesConfig);
     handle(response: any): boolean;
     getNewMessages(messages: ChatMessage[]): ChatMessage[];
     formatMessage(message: ChatMessage): ChatMessage;
     emitChatMessage(message: ChatMessage): boolean;
-    emitPastMessages(response: any): boolean;
+    emitPastMessages(messages: ChatMessage[]): boolean;
     fixAvatar(file: string | undefined): string;
 }
 export default ChatMessages;

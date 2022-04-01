@@ -46,7 +46,7 @@ class ChatMessages extends EventEmitter {
     };
 
     private time: number = Math.floor(Date.now() / 1000);
-    private lastMessagesFetched: boolean = false;
+    private pastMessagesFetched: boolean = false;
 
     constructor(chatServiceMessagesConfig: ChatServiceMessagesConfig = {}) {
         super();
@@ -55,12 +55,14 @@ class ChatMessages extends EventEmitter {
     }
 
     handle(response: any): boolean {
-        if (this.config.fetchPastMessages && !this.lastMessagesFetched) {
-            return this.emitPastMessages(response);
+        let messages: ChatMessage[] = response.data.chats;
+
+        if (this.config.fetchPastMessages && !this.pastMessagesFetched) {
+            this.pastMessagesFetched = true;
+            return this.emitPastMessages(messages);
         }
 
-        const messages: ChatMessage[] = this.getNewMessages(response.data.chats);
-        
+        messages = this.getNewMessages(messages);
         if (messages.length > 0) {
             messages.forEach((message: ChatMessage) => {
                 this.time = message.send_time;
@@ -90,10 +92,7 @@ class ChatMessages extends EventEmitter {
         return this.emit(event, message);
     }
 
-    emitPastMessages(response: any): boolean { 
-        this.lastMessagesFetched = true;
-
-        let messages: ChatMessage[] = response.data.chats || [];
+    emitPastMessages(messages: ChatMessage[]): boolean { 
         if (messages.length > 0) {
             const currentTime = Math.floor(Date.now() / 1000);
 

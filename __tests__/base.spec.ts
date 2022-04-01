@@ -13,12 +13,6 @@ let TrovoChat: ChatService;
 let user_id: number;
 let second_id: number;
 
-const chatConfig: ChatServiceConfig = {
-    messages: {
-        fetchPastMessages: false
-    }
-};
-
 const testingUsers = ["InfiniteHorror", "Wara"];
 
 beforeAll(async () => {
@@ -154,6 +148,12 @@ describe("Channel", () => {
 });
 
 describe("Chat", () => {
+    const chatConfig: ChatServiceConfig = {
+        messages: {
+            fetchPastMessages: true
+        }
+    };
+    
     beforeAll(async () => {
         TrovoChat = await Trovo.chat.connect(chatConfig);
         TrovoChat.on(TrovoChat.events.READY, () => {

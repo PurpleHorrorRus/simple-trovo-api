@@ -57,13 +57,9 @@ class ChatService extends EventEmitter {
     constructor(chatServiceConfig: ChatServiceConfig = defaultChatServiceConfig) {
         super();
 
+        chatServiceConfig = Object.assign(defaultChatServiceConfig, chatServiceConfig);
         this.messages = new ChatMessages(chatServiceConfig.messages);
-
-        this.config = {
-            ...defaultChatServiceConfig,
-            ...chatServiceConfig
-        };
-
+        
         this.socket = new WebSocket(this.endpoint, [], this.WebSocketParams);
         this.socket.onopen = () => {
             this.connected = true;
