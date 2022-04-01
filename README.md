@@ -124,7 +124,7 @@ const TrovoChat = await Trovo.chat.connect(chatServiceConfig?);
 TrovoChat.on(TrovoChat.events.READY, () => {
     console.log("Trovo chat has been connected");
 
-    // Listen chat messages (regular messages and magic chat)
+    // Listen regular chat messages
     TrovoChat.messages.on("message", message => {
         console.log(message);
     });
@@ -134,11 +134,20 @@ TrovoChat.on(TrovoChat.events.READY, () => {
         console.log(`There is ${messages.length} of old messages`);
     });
 
-    TrovoChat.messages.on(TrovoChat.messages.events.SPELLS, spell => {
-        console.log(`${spell.nick_name} uses ${spell.content.gift} for ${spell.content.num} mana!`);
+    /*
+        Listen special events
+        Special event examples: follow, unfollow, spells
+    */
+
+    TrovoChat.messages.on(TrovoChat.messages.events.SPELLS, message => {
+        const user = message.nick_name;
+        const spell = message.content.gift;
+        const cost = message.content.gift_value;
+        const value = message.content.value_type;
+
+        console.log(`${user} uses ${count}x${spell} for ${cost} ${value}!`);
     });
 
-    // Listen special message events
     TrovoChat.messages.on(TrovoChat.messages.events.FOLLOW, follow => {
         console.log(`Thank you for following, ${follow.nick_name}!`);
     });
