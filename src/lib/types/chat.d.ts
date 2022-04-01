@@ -5,6 +5,7 @@ export type ChatMessageEventsType = {
     [key: number]: string
 };
 
+export type EventType = string | symbol;
 export type ChatSpecialEventType = {
-    [key: string]: ChatMessageEventsType
+    [key: string]: EventType
 }

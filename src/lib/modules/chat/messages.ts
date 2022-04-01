@@ -1,7 +1,7 @@
 import EventEmitter from "events";
 
 import { ChatMessage, ChatServiceMessagesConfig } from "../../interfaces/chat";
-import { ChatMessageEventsType, ChatSpecialEventType } from "../../types/chat";
+import { ChatMessageEventsType, ChatSpecialEventType, EventType } from "../../types/chat";
 
 class ChatMessages extends EventEmitter { 
     private avatarEndpoint: string = "https://headicon.trovo.live";
@@ -27,6 +27,8 @@ class ChatMessages extends EventEmitter {
     };
 
     public events: ChatSpecialEventType = {
+        MESSAGE: "message",
+        PAST_MESSAGES: "past_messages",
         SPELLS: this.ChatMessageEvents[5],
         SUPER_CAP: this.ChatMessageEvents[6],
         COLORFUL: this.ChatMessageEvents[7],
@@ -94,7 +96,7 @@ class ChatMessages extends EventEmitter {
 
     emitChatMessage(message: ChatMessage): boolean {
         message = this.formatMessage(message);
-        const event: string = this.ChatMessageEvents[message.type] || "message";
+        const event: EventType = this.ChatMessageEvents[message.type] || this.events.MESSAGE;
         return this.emit(event, message);
     }
 
@@ -110,7 +112,7 @@ class ChatMessages extends EventEmitter {
                 return this.formatMessage(message);
             });
 
-            return this.emit("past_messages", messages);
+            return this.emit(this.events.PAST_MESSAGES, messages);
         }
 
         return false;
