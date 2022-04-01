@@ -70,13 +70,16 @@ class Chat extends TrovoRequests {
         });
     }
 
-    async command(command: string, chaneelID: number | string): TrovoRequestType {
-        command = command.replace("/", "");
+    async command(command: string, channel_id: number | string): TrovoRequestType {
+        if (command[0] === "/") {
+            command = command.replace("/", "");
+        }
+
         return await this.requestEndpoint("channels/command", {
             method: "POST",
             body: JSON.stringify({
                 command,
-                channel_id: chaneelID
+                channel_id
             })
         });
     }

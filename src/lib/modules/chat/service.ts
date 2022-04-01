@@ -103,8 +103,8 @@ class ChatService extends EventEmitter {
         }
 
         const message: WSMessage = { type, nonce, data };
-        const toSend: string = JSON.stringify(message);
-        return this.socket.send(toSend);
+        const payload: string = JSON.stringify(message);
+        return this.socket.send(payload);
     }
 
     messageHandler(message: any): Promise<WSHandler> {

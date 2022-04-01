@@ -24,6 +24,6 @@ declare class Chat extends TrovoRequests {
     channelToken(channelID: number): Promise<string>;
     send(content: string, channel_id?: number | string): TrovoRequestType;
     delete(channelID: number | string, messageID: string, uID: number | string): Promise<any>;
-    command(command: string, chaneelID: number | string): TrovoRequestType;
+    command(command: string, channel_id: number | string): TrovoRequestType;
 }
 export default Chat;
