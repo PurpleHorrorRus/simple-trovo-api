@@ -84,8 +84,10 @@ class ChatMessages extends EventEmitter {
     formatMessage(message: ChatMessage): ChatMessage { 
         message.avatar = this.fixAvatar(message.avatar);
 
-        try { message.content = JSON.parse(message.content); }
-        catch (_) { null; }
+        if (message.type !== 0) {
+            try { message.content = JSON.parse(message.content); }
+            catch (_) { null; }
+        }
 
         return message;
     }
