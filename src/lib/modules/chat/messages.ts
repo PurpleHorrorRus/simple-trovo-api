@@ -57,7 +57,7 @@ class ChatMessages extends EventEmitter {
     }
 
     handle(response: any): boolean {
-        let messages: ChatMessage[] = response.data.chats;
+        let messages: ChatMessage[] | undefined = response.data.chats;
         if (!messages) return false;
 
         if (this.config.fetchPastMessages && !this.pastMessagesFetched) {
