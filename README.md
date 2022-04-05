@@ -125,12 +125,12 @@ TrovoChat.on(TrovoChat.events.READY, () => {
     console.log("Trovo chat has been connected");
 
     // Listen regular chat messages
-    TrovoChat.messages.on("message", message => {
+    TrovoChat.messages.on(TrovoChat.messages.events.MESSAGE, message => {
         console.log(message);
     });
 
     // Emitting only if you specified messages.fetchPastMessages to true
-    TrovoChat.messages.once("past_messages", messages => {
+    TrovoChat.messages.once(TrovoChat.messages.events.PAST_MESSAGES, messages => {
         console.log(`There is ${messages.length} of old messages`);
     });
 
