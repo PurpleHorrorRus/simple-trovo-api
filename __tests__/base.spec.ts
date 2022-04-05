@@ -179,7 +179,7 @@ describe("Chat", () => {
 
     test("Receive message", async () => {
         const message: ChatMessage = await new Promise(resolve => {
-            TrovoChat.messages.once("message", resolve);
+            TrovoChat.messages.once(TrovoChat.messages.events.MESSAGE, resolve);
             Trovo.chat.send("Sended from simple-trovo-api");
         });
 
