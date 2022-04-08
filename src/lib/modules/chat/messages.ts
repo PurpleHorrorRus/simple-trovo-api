@@ -13,7 +13,7 @@ class ChatMessages extends EventEmitter {
         7: "colorful",
         8: "spell",
         9: "bullet_screen",
-        5001: "subscribption",
+        5001: "subscription",
         5002: "system",
         5003: "follow",
         5004: "welcome",
