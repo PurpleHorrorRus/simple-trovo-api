@@ -24,14 +24,12 @@ class TrovoRequests extends Static {
         return response.ok ? json : this.handleError(json);
     }
 
-    public async requestEndpoint(endpoint: string, params: RequestInit = {}): TrovoRequestType {
-        const valid = await this.request(`${this.apiRoot}/validate`).catch(e => { 
-            this.emit("error", e);
-            return false;
-        });
-
-        if (!valid) {
-            return null;
+    public async requestEndpoint(endpoint: string, params: RequestInit = {}, ignoreValidating: boolean = false): TrovoRequestType {
+        if (this.headers.has("Authorization") && !ignoreValidating) {
+            await this.request(`${this.apiRoot}/validate`).catch(e => { 
+                this.emit("error", e);
+                throw e;
+            });
         }
 
         if (params.body) {

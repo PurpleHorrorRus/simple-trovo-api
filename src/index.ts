@@ -56,7 +56,7 @@ export class TrovoAPI {
     }
 
     public async validate(): TrovoRequestType {
-        return await this.requests.requestEndpoint("validate");
+        return await this.requests.requestEndpoint("validate", {}, true);
     }
 
     async refresh(): TrovoRequestType { 
@@ -66,7 +66,7 @@ export class TrovoAPI {
                 grant_type: "refresh_token",
                 refresh_token: this.refreshToken
             })
-        });
+        }, true);
 
         if (!this.refreshInterval) {
             this.refreshInterval = setInterval(() => this.refresh(), response.expires_in * 1000);
@@ -138,7 +138,7 @@ export class TrovoAPI {
                 code,
                 redirect_uri: this.config.redirect_uri
             })
-        });
+        }, true);
 
         this.update(response);
         this.write(response);
@@ -152,13 +152,15 @@ export class TrovoAPI {
             body: JSON.stringify({
                 access_token: this.accessToken
             })
-        });
+        }, true);
     }
 
     update(response: any): void {
         this.accessToken = response.access_token;
         this.refreshToken = response.refresh_token;
-        this.headers.set("Authorization", `OAuth ${this.accessToken}`);
+        if (this.accessToken) {
+            this.headers.set("Authorization", `OAuth ${this.accessToken}`);
+        }
     }
 
     write(response: any): void { 

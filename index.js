@@ -46,7 +46,7 @@ class TrovoAPI {
         return `${loginRoot}?${query}`;
     }
     async validate() {
-        return await this.requests.requestEndpoint("validate");
+        return await this.requests.requestEndpoint("validate", {}, true);
     }
     async refresh() {
         const response = await this.requests.requestEndpoint("refreshtoken", {
@@ -55,7 +55,7 @@ class TrovoAPI {
                 grant_type: "refresh_token",
                 refresh_token: this.refreshToken
             })
-        });
+        }, true);
         if (!this.refreshInterval) {
             this.refreshInterval = setInterval(() => this.refresh(), response.expires_in * 1000);
         }
@@ -112,7 +112,7 @@ class TrovoAPI {
                 code,
                 redirect_uri: this.config.redirect_uri
             })
-        });
+        }, true);
         this.update(response);
         this.write(response);
         return response;
@@ -123,12 +123,14 @@ class TrovoAPI {
             body: JSON.stringify({
                 access_token: this.accessToken
             })
-        });
+        }, true);
     }
     update(response) {
         this.accessToken = response.access_token;
         this.refreshToken = response.refresh_token;
-        this.headers.set("Authorization", `OAuth ${this.accessToken}`);
+        if (this.accessToken) {
+            this.headers.set("Authorization", `OAuth ${this.accessToken}`);
+        }
     }
     write(response) {
         if (this.config.credits) {

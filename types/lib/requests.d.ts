@@ -6,6 +6,6 @@ declare class TrovoRequests extends Static {
     private apiRoot;
     constructor(headers: Headers);
     private request;
-    requestEndpoint(endpoint: string, params?: RequestInit): TrovoRequestType;
+    requestEndpoint(endpoint: string, params?: RequestInit, ignoreValidating?: boolean): TrovoRequestType;
 }
 export default TrovoRequests;
