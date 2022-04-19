@@ -102,7 +102,7 @@ export class TrovoAPI {
         this.update({ access_token, refresh_token });
 
         if (access_token) {
-            const response = await this.validate().catch(async e => {
+            const response = await this.validate().catch(async () => {
                 await this.refresh().catch(e => {
                     throw e;
                 });
