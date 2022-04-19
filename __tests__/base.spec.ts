@@ -23,6 +23,10 @@ beforeAll(async () => {
         credits: "credits.json"
     });
 
+    Trovo.requests.on("error", e => {
+        console.error(e);
+    });
+
     let access_token: string = process.env.ACCESS_TOKEN! || "";
     let refresh_token: string = process.env.REFRESH_TOKEN! || "";
 

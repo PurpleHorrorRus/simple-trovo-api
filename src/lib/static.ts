@@ -1,4 +1,10 @@
-class Static {
+import EventEmitter from "events";
+
+class Static extends EventEmitter {
+    constructor() { 
+        super();
+    }
+
     handleError(error: any): Error {
         throw new Error(error.message || error);
     }

@@ -25,6 +25,15 @@ class TrovoRequests extends Static {
     }
 
     public async requestEndpoint(endpoint: string, params: RequestInit = {}): TrovoRequestType {
+        const valid = await this.request(`${this.apiRoot}/validate`).catch(e => { 
+            this.emit("error", e);
+            return false;
+        });
+
+        if (!valid) {
+            return null;
+        }
+
         if (params.body) {
             params.method = "POST";
         }
