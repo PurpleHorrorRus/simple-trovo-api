@@ -33,11 +33,17 @@ beforeAll(async () => {
         refresh_token = credits.refresh_token;
     }
 
-    Trovo = await Trovo.auth(access_token, refresh_token);
-    
-    const { users } = await Trovo.users.get(testingUsers);
-    user_id = Number(users[0].user_id);
-    second_id = Number(users[1].user_id);
+    try {
+        await Trovo.auth(access_token, refresh_token).catch(e => { 
+            console.log(e);
+        });
+
+        const { users } = await Trovo.users.get(testingUsers);
+        user_id = Number(users[0].user_id);
+        second_id = Number(users[1].user_id);
+    } catch (e) { 
+        console.error(e);
+    }
 });
 
 describe("Main", () => {

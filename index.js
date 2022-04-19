@@ -82,8 +82,11 @@ class TrovoAPI {
         }
         this.update({ access_token, refresh_token });
         if (access_token) {
-            const response = await this.validate().catch(async () => {
-                return await this.refresh().catch(e => {
+            const response = await this.validate().catch(async (e) => {
+                await this.refresh().catch(e => {
+                    throw e;
+                });
+                return await this.validate().catch(e => {
                     throw e;
                 });
             });
