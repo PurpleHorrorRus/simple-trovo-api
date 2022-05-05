@@ -30,17 +30,17 @@
         "test:ci": "jest --setupFilesAfterEnv ./ci.js"
     },
     "devDependencies": {
-        "@types/jest": "^27.4.1",
-        "@types/node": "^17.0.23",
+        "@types/jest": "^27.5.0",
+        "@types/node": "^17.0.31",
         "@types/node-fetch": "^2.6.1",
         "@types/ws": "^8.5.3",
-        "@typescript-eslint/eslint-plugin": "^5.18.0",
-        "@typescript-eslint/parser": "^5.18.0",
+        "@typescript-eslint/eslint-plugin": "^5.22.0",
+        "@typescript-eslint/parser": "^5.22.0",
         "dotenv": "^16.0.0",
-        "eslint": "^8.12.0",
-        "jest": "^27.5.1",
-        "ts-jest": "^27.1.4",
-        "typescript": "^4.6.3"
+        "eslint": "^8.14.0",
+        "jest": "^28.0.3",
+        "ts-jest": "^28.0.1",
+        "typescript": "^4.6.4"
     },
     "dependencies": {
         "node-fetch": "2.6.7",
