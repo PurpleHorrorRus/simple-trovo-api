@@ -23,7 +23,7 @@ class Channels extends TrovoRequests {
         })
     }
     
-    async get(user: number | string = ""): TrovoRequestType {
+    async get(user: number | string): TrovoRequestType {
         const params: any = {};
         
         typeof user === "number"
