@@ -68,10 +68,6 @@ export class TrovoAPI {
             })
         }, true);
 
-        if (!this.refreshInterval) {
-            this.refreshInterval = setInterval(() => this.refresh(), response.expires_in * 1000);
-        }
-
         this.update(response);
         this.write(response);
 
@@ -81,6 +77,11 @@ export class TrovoAPI {
     async auth(access_token: string = "", refresh_token: string = ""): Promise<TrovoAPI> {
         if (access_token && !refresh_token) {
             this.update({ access_token });
+
+            await this.validate().catch(e => { 
+                throw e;
+            });
+
             return this;
         }
 
@@ -103,10 +104,12 @@ export class TrovoAPI {
 
         if (access_token) {
             const response = await this.validate().catch(async () => {
-                await this.refresh().catch(e => {
+                const refresh: any = await this.refresh().catch(e => {
                     throw e;
                 });
-
+    
+                this.refreshInterval = setInterval(() => this.refresh(), refresh.expires_in * 1000);
+    
                 return await this.validate().catch(e => {
                     throw e;
                 });
