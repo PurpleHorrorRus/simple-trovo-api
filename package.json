@@ -22,6 +22,9 @@
         "Broadcasts",
         "Streams"
     ],
+    "engines": {
+        "node": ">=16.8.0"
+    },
     "scripts": {
         "lint": "eslint . --ext .ts",
         "clean": "rimraf lib/ && rimraf types/",
